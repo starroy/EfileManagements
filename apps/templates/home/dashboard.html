@@ -1,0 +1,280 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Dashboard {% endblock %} 
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+
+
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12 mt-5 text-center mb-5">
+          <h1>User Data</h1>
+        </div>
+      </div>
+          <div class="d-flex gap-3 justify-content-around text-nowrap">
+            <iframe name="votar" style="display:none;"></iframe>
+
+          <form
+              method="post"
+            id="imagetotextForm"
+            enctype="multipart/form-data"
+          >
+            {% csrf_token %}
+            <!-- <div class="col-md-12"> -->
+            <div class="form-group">
+              <label for="image">Upload Adhar Image</label>
+              <input
+                type="file"
+                class="form-control"
+                name="image"
+                id="image"
+                placeholder="Image"
+                accept="image/*"
+              />
+            </div>
+            <button type="submit" class="btn btn-primary btn-submit mt-4 mb-4" id="adhar">
+              Submit
+            </button>
+          </form>
+          <form
+            method="post"
+            id="imagetotextFormPan"
+            enctype="multipart/form-data"
+          >
+            {% csrf_token %}
+            <div class="form-group">
+              <label for="imagepan">Upload PAN Image</label>
+              <input
+                type="file"
+                class="form-control"
+                name="imagepan"
+                id="imagepan"
+                placeholder="Image"
+                accept="image/*"
+              />
+            </div>
+            <button type="submit" class="btn btn-primary btn-submit mt-4 mb-4" id="pan">
+              Submit
+            </button>
+        <!-- </div> -->
+      <!-- </div> -->
+      </div>
+
+      <div class="row col-md-12 mt-4 mb-5 d-flex">
+        <!-- <div class="header"> -->
+        <!--   <h1 class="fw-bold text-center">Result</h1> -->
+        <!-- </div> -->
+        <div class="card col-md-6">
+          <!-- <textarea -->
+          <!--   disabled -->
+          <!--   style="height: 300px; margin-bottom: 10px; resize: none" -->
+          <!--   id="result" -->
+          <!--   class="col-md-12 mt-2 bg-light p-5 result" -->
+          <!-- > -->
+          <form class="col-md-12" action="" method="POST">
+            <div class="col-md-10 gap-3 py-3 px-3">
+              <label class="form-label" for="name">Name</label>
+              <input
+                class="form-control px-3"
+                id="name"
+                type="text"
+                name="name"
+              />
+            </div>
+            <div class="col-md-10 gap-3 py-2 px-3">
+              <label class="form-label text-nowrap" for="dob"
+                >Date of Birth</label
+              >
+              <input class="form-control" id="dob" type="text" name="dob" />
+            </div>
+            <div class="col-md-10 gap-3 py-2 px-3">
+              <label class="form-label text-nowrap" for="gender">Gender</label>
+              <input
+                class="form-control"
+                id="gender"
+                type="text"
+                name="gender"
+              />
+            </div>
+            <div class="col-md-10 gap-3 py-2 px-3">
+              <label class="form-label text-nowrap" for="fatherName"
+                >Father's Name</label
+              >
+              <input
+                class="form-control"
+                id="fatherName"
+                type="text"
+                name="fatherName"
+              />
+            </div>
+            <div class="col-md-10 gap-3 py-2 px-3">
+              <label class="form-label text-nowrap" for="adharNo"
+                >Adhar Number</label
+              >
+              <input
+                class="form-control"
+                id="adharNo"
+                type="text"
+                name="adharNo"
+              />
+            </div>
+            <div class="col-md-10 gap-3 py-2 px-3">
+              <label class="form-label text-nowrap" for="panNo"
+                >PAN Number</label
+              >
+              <input
+                class="form-control"
+                id="panNo"
+                type="text"
+                name="adharNo"
+              />
+            </div>
+            <button
+              type="submit"
+              class="btn btn-primary btn-submit mt-4"
+              style="margin-bottom: 10px"
+            >
+              Submit
+            </button>
+          </form>
+          <!-- </textarea> -->
+        </div>
+        <div class="card col-md-6 d-flex flex-column">
+          <img
+            disabled
+            class="col-md-12"
+            id="imgCtn"
+            style="
+              height: 300px;
+              resize: none;
+              margin-top: 10px;
+              margin-bottom: 10px;
+            "
+          />
+          <img
+            disabled
+            class="col-md-12"
+            id="imgCtnPan"
+            style="
+              height: 300px;
+              resize: none;
+              margin-top: 10px;
+              margin-bottom: 10px;
+            "
+          />
+        </div>
+      </div>
+    </div>
+ <script src="https://code.jquery.com/jquery-3.5.1.js" 
+          integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" 
+            crossorigin="anonymous"></script>
+
+    <script>
+      $(document).ready(function () {
+        $("#imagetotextForm").submit(function (e) {
+          e.preventDefault();
+          var formData = new FormData(this);
+          $(".btn-submit").html(
+            '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...'
+          );
+          // disable submit button
+          $(".btn-submit").attr("disabled", true);
+          $.ajax({
+            url: "{% url 'imagetoText' %}",
+            type: "POST",
+            data: formData,
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function (data) {
+              // var tex = data.text;
+              // $(".result").html(tex);
+              var b64imgData = data.bytes; // bytes is the 'bytes string' show upper
+              // var img = new Image();
+
+              imgUrl = "data:image/jpg;base64, " + b64imgData;
+              document.getElementById("imgCtn").src = imgUrl;
+              document.getElementById("name").value = data.text.user_name;
+              document.getElementById("gender").value = data.text.gender;
+              document.getElementById("adharNo").value = data.text.adhaar_no;
+              document.getElementById("dob").value = data.text.dob;
+              // img.src = imgUrl;
+
+              // $(".imgCtn").html(img);
+              // remove spinner from submit button
+              $(".btn-submit").html("Submit");
+              // enable submit button
+              $(".btn-submit").attr("disabled", false);
+              return false;
+            },
+            error: function (data) {
+              // remove spinner from submit button
+              $(".btn-submit").html("Submit");
+              // enable submit button
+              $(".btn-submit").attr("disabled", false);
+            },
+          });
+        });
+      });
+    </script>
+
+    <script>
+      $(document).ready(function () {
+        $("#imagetotextFormPan").submit(function (e) {
+          e.preventDefault();
+          var formData = new FormData(this);
+          // $(".btn-submit").html(
+          $("#pan").html(
+            '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...'
+          );
+          // disable submit button
+          // $(".btn-submit").attr("disabled", true);
+          $("#pan").attr("disabled", true);
+          $.ajax({
+            url: "{% url 'imagetoTextPan' %}",
+            type: "POST",
+            data: formData,
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function (data) {
+              // var tex = data.text;
+              // $(".result").html(tex);
+              var b64imgData = data.bytes; // bytes is the 'bytes string' show upper
+              // var img = new Image();
+
+              imgUrl = "data:image/jpg;base64, " + b64imgData;
+              document.getElementById("imgCtnPan").src = imgUrl;
+              document.getElementById("panNo").value = data.text.pan_no;
+              document.getElementById("fatherName").value = data.text.fathers_name;
+              // img.src = imgUrl;
+
+              // $(".imgCtn").html(img);
+              // remove spinner from submit button
+              // $(".btn-submit").html("Submit");
+              $("#pan").html("Submit");
+              // enable submit button
+              // $(".btn-submit").attr("disabled", false);
+              $("#pan").attr("disabled", false);
+              return false;
+            },
+            error: function (data) {
+              // remove spinner from submit button
+              // $(".btn-submit").html("Submit");
+              $("#pan").html("Submit");
+              // enable submit button
+              // $(".btn-submit").attr("disabled", false);
+              $("#pan").attr("disabled", false);
+            },
+          });
+        });
+      });
+    </script>
+    
+    {%endblock %}
+    {% include 'includes/scripts.html' %}
+ 

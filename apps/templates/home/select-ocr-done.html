@@ -1,0 +1,25 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Dashboard {% endblock %} 
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+<div class="d-flex justify-content-center  mt-5">
+  <!-- <form class="form-control"> -->
+<div class="col-md-6 text-center">
+<img src="data:image/jpg;base64,{{imageBytes}}" class="img-fluid"  >
+</div>
+<div class="col-md-6 text-center">
+    <textarea   cols="50" rows="10" class="form-control" style="font-size: 18px;">{{result}}</textarea>
+  <!-- </form> -->
+</div>
+
+</div>
+<div class="mr-auto mt-4">
+        <a href="{%url 'selectTextCropper'%}" class="btn btn-primary" id="resetButton">Reset</a>
+</div>
+    {%endblock %}
+    {% include 'includes/scripts.html' %}
+ 
