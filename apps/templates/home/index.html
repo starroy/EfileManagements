@@ -1,0 +1,548 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Dashboard {% endblock %} 
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{%block content%}
+
+
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12 mt-5 text-center mb-5">
+          
+        </div>
+      </div>
+          <div class="d-flex gap-3 justify-content-around text-nowrap col-md-12">
+            <iframe name="votar" style="display:none;"></iframe>
+
+          <form
+              method="post"
+            id="imagetotextForm"
+            enctype="multipart/form-data"
+          >
+            {% csrf_token %}
+            <!-- <div class="col-md-12"> -->
+            <div class="form-group">
+              <label for="image">Upload Adhar Image</label>
+              <input
+                type="file"
+                class="form-control"
+                name="image"
+                id="image"
+                placeholder="Image"
+                accept="image/*"
+              />
+            </div>
+            <button type="submit" class="btn btn-primary btn-submit mt-4 mb-4" id="adhar">
+              Submit
+            </button>
+          </form>
+          <form
+            method="post"
+            id="imagetotextFormPan"
+            enctype="multipart/form-data"
+          >
+            {% csrf_token %}
+            <div class="form-group">
+              <label for="imagepan">Upload PAN Image</label>
+              <input
+                type="file"
+                class="form-control"
+                name="imagepan"
+                id="imagepan"
+                placeholder="Image"
+                accept="image/*"
+              />
+            </div>
+            <button type="submit" class="btn btn-primary btn-submit mt-4 mb-4" id="pan">
+              Submit
+            </button>
+            </form>
+            <form class="search form-group" id="search-main"  method="post" enctype="multipart/form-data">
+{%csrf_token%}
+              <label for="searchBar">Search User</label>
+            <div class="input-group input-group-merge search-bar">
+              <span class="input-group-text" id="topbar-addon">
+                <svg class="icon icon-xs" x-description="Heroicon name: solid/search" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                  <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"></path>
+                </svg>
+              </span>
+
+              <input type="text" class="form-control" id="searchBar" placeholder="Search" aria-label="Search" aria-describedby="topbar-addon" name="searchDoc">
+          </div>
+          <div class="d-flex  py-4 justify-content-around">
+          <div class="form-check py-2">
+            <input class="form-check-input" type="radio" name="searchCard" id="searchAdhar" value="adhar"  checked>
+            <label class="form-check-label" for="searchAdhar">
+              Adhar
+            </label>
+          </div>
+          <div class="form-check py-2">
+            <input class="form-check-input" type="radio" name="searchCard" value="pan" id="searchPan">
+            <label class="form-check-label" for="searchPan">
+              Pan
+            </label>
+          </div>
+        
+          <button type="submit" class="btn btn-primary btn-submit  mb-5" id="cardSearch">
+            Submit
+          </button>
+          </div>
+          </form>
+       
+      </div>
+
+      <div class="row col-md-12 mt-4 mb-5 d-flex">
+        
+        <div class="card col-md-6">
+      
+          <form class="col-md-12" id="userData" action="" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="col-md-10 gap-3 py-3 px-3" id="userID" hidden>
+              <label class="form-label" for="name">ID</label>
+              <input
+                class="form-control px-3"
+                id="mongoid"
+                type="text"
+                name="id"
+                value = "" 
+              />
+              </div>
+            <div class="col-md-10 gap-3 py-3 px-3">
+              <label class="form-label" for="name">Name</label>
+              <input
+                class="form-control px-3"
+                id="name"
+                type="text"
+                name="name"
+                value = ""
+              />
+            </div>
+            <div class="col-md-10 gap-3 py-2 px-3">
+              <label class="form-label text-nowrap" for="dob"
+                >Date of Birth</label
+              >
+              <input class="form-control" id="dob" type="text" name="dob" />
+            </div>
+            <div class="col-md-10 gap-3 py-2 px-3">
+              <label class="form-label text-nowrap" for="gender">Gender</label>
+              <input
+                class="form-control"
+                id="gender"
+                type="text"
+                name="gender"
+              />
+            </div>
+            <div class="col-md-10 gap-3 py-2 px-3">
+              <label class="form-label text-nowrap" for="fatherName"
+                >Father's Name</label
+              >
+              <input
+                class="form-control"
+                id="fatherName"
+                type="text"
+                name="fatherName"
+              />
+            </div>
+            <div class="col-md-10 gap-3 py-2 px-3">
+              <label class="form-label text-nowrap" for="adharNo"
+                >Adhar Number</label
+              >
+              <input
+                class="form-control"
+                id="adharNo"
+                type="text"
+                name="adharNo"
+              />
+            </div>
+            <div class="col-md-10 gap-3 py-2 px-3">
+              <label class="form-label text-nowrap" for="panNo"
+                >PAN Number</label
+              >
+              <input
+                class="form-control"
+                id="panNo"
+                type="text"
+                name="panNo"
+              />
+            </div>
+            <div class="d-dflex mx-3 gap-3">
+    <button
+            type="submit"
+            class="btn btn-primary btn-submit mt-4"
+            style="margin-bottom: 9px"
+            id="userDataSub"
+          >
+            Submit
+          </button>
+            <a
+              type="button"
+              class="btn btn-primary btn-submit mt-4"
+              style="margin-bottom: 10px"
+              id="reset"
+              href="{% url 'home'%}"
+            >
+              Reset
+        </a>
+        <button
+              type="button"
+              class="btn btn-primary btn-submit mt-4"
+              style="margin-bottom: 10px"
+              id="editForm"
+              onclick="formEdit()" hidden
+            >
+              Edit
+      </button>
+          </form>
+          {% if user.is_superuser %}
+          <form  class="col-md-12" method="POST" id="delform" action="{%url 'deleterecord' %}" enctype="multipart/form-data">
+            {% csrf_token %}
+      <input class="form-control px-3" type="text" id="recordid" value="" name="recid" hidden>      
+      <button
+      type="submit"
+      class="btn btn-danger btn-submit mt-4"
+      style="margin-bottom: 9px"
+      id="userDataDel"
+      hidden
+    >
+      Delete
+    </button>
+          </form>
+      {% endif %} 
+          </div>
+          <!-- </textarea> -->
+          <p id="userexists"></p>
+        </div>
+        <div class="card col-md-6 d-flex flex-column">
+          <img
+            disabled
+            class="col-md-12"
+            id="imgCtn"
+            style="
+              height: 300px;
+              resize: none;
+              margin-top: 10px;
+              margin-bottom: 10px;
+            "
+          />
+          <img
+            disabled
+            class="col-md-12"
+            id="imgCtnPan"
+            style="
+              height: 300px;
+              resize: none;
+              margin-top: 10px;
+              margin-bottom: 10px;
+            "
+          />
+        </div>
+      </div>
+    </div>
+    <div class="modal fade" id="modal-notification" tabindex="-1" role="dialog" aria-labelledby="modal-notification" aria-hidden="true">
+      <div class="modal-dialog modal-white modal-dialog-centered" role="document">
+          <div class="modal-content bg-gradient-white">
+              <!-- <button type="button" class="btn-close  theme-settings-close fs-6 ms-auto" data-bs-dismiss="modal" aria-label="Close"></button> -->
+              <!-- <div class="modal-header">
+                  <p class="modal-title text-gray-200" id="modal-title-notification">A new experience, personalized for you.</p>
+              </div> -->
+              <div class="modal-body text-danger">
+                  <div class="py-3 text-center">
+                      <!-- <span class="modal-icon">
+                        <i class="fa fa-exclamation-circle" style="font-size:20px;color:red"></i>
+                        
+                        <svg class="icon icon-xl text-gray-200" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M8.707 7.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l2-2a1 1 0 00-1.414-1.414L11 7.586V3a1 1 0 10-2 0v4.586l-.293-.293z"></path><path d="M3 5a2 2 0 012-2h1a1 1 0 010 2H5v7h2l1 2h4l1-2h2V5h-1a1 1 0 110-2h1a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2V5z"></path></svg> -->
+                      <!-- </span> --> 
+                      <h2 class="h2 modal-title my-2">User Exists</h2>
+                      <!-- <p>Do you know that you can assign status and relation to a company right in the visit list?</p> -->
+                  </div>
+              </div>
+              <!-- <div class="modal-footer"> -->
+                  <button type="button" class="btn btn-sm btn-light" data-bs-dismiss="modal">Close</button>
+              <!-- </div> -->
+          </div>
+      </div>
+  </div>
+ <script src="https://code.jquery.com/jquery-3.5.1.js" 
+          integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" 
+            crossorigin="anonymous"></script>
+
+    <script>
+      $(document).ready(function () {
+        $("#imagetotextForm").submit(function (e) {
+          e.preventDefault();
+          var formData = new FormData(this);
+          $("#adhar").html(
+            '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...'
+          );
+          // disable submit button
+          $("#adhar").attr("disabled", true);
+          $.ajax({
+            url: "{% url 'imagetoText' %}",
+            type: "POST",
+            data: formData,
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function (data) {
+             
+              var b64imgData = data.bytes; // bytes is the 'bytes string' show upper
+
+              imgUrl = "data:image/jpg;base64, " + b64imgData;
+              document.getElementById("imgCtn").src = imgUrl;
+              var uname = document.getElementById("name").value
+              if (uname === ""){
+                document.getElementById("name").value = data.text.user_name
+              }
+              // document.getElementById("name").value = data.text.user_name;
+              document.getElementById("gender").value = data.text.gender;
+              document.getElementById("adharNo").value = data.text.adhaar_no;
+              document.getElementById("dob").value = data.text.dob;
+            
+              // remove spinner from submit button
+              $("#adhar").html("Submit");
+              // enable submit button
+              // $("#adhar").attr("disabled", false);
+              return false;
+            },
+            error: function (data) {
+              // remove spinner from submit button
+              $("#adhar").html("Submit");
+              // enable submit button
+              $("#adhar").attr("disabled", false);
+            },
+          });
+        });
+      });
+    </script>
+
+    <script>
+      $(document).ready(function () {
+        $("#imagetotextFormPan").submit(function (e) {
+          e.preventDefault();
+          var formData = new FormData(this);
+          $("#pan").html(
+            '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...'
+          );
+          // disable submit button
+          $("#pan").attr("disabled", true);
+          $.ajax({
+            url: "{% url 'imagetoTextPan' %}",
+            type: "POST",
+            data: formData,
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function (data) {
+             
+              var b64imgData = data.bytes; // bytes is the 'bytes string' show upper
+
+              imgUrl = "data:image/jpg;base64, " + b64imgData;
+              document.getElementById("imgCtnPan").src = imgUrl;
+              document.getElementById("panNo").value = data.text.pan_no;
+              document.getElementById("fatherName").value = data.text.fathers_name;
+              var uname = document.getElementById("name").value
+              if (uname === ""){
+                document.getElementById("name").value = data.text.user_name
+              }
+              
+              $("#pan").html("Submit");
+              // enable submit button
+              // $("#pan").attr("disabled", false);
+              return false;
+            },
+            error: function (data) {
+              // remove spinner from submit button
+              $("#pan").html("Submit");
+              // enable submit button
+              $("#pan").attr("disabled", false);
+            },
+          });
+        });
+      });
+    </script>
+   
+   <script>
+
+  //   $(document).ready(function () {
+  
+  //     $("#userData").submit(
+  //       function (e) {
+  //       e.preventDefault();
+  //       var formData = new FormData(this);
+  //       $("#userDataSub").html(
+  //         '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...'
+  //       );
+  //     //   // disable submit button
+  //       $("#userDataSub").attr("disabled", true);
+  //       $.ajax({
+  //         url: "{% url 'insertintoDatabase' %}",
+  //         type: "POST",
+  //         data: formData,
+  //         cache: false,
+  //         contentType: false,
+  //         processData: false,
+  //         success: function (data) {
+  //           if (data.ret_val === 0){
+  //           document.getElementById("mongoid").value = data.vals._id;
+  //           document.getElementById("mongoid").disabled = true;
+  //           $("#userID").removeAttr("hidden");
+
+  //           $("#userDataSub").html("Submit");
+  //           $("#userData :input").prop("readonly", true);
+  //           // enable submit button
+  //           // $("#userDataSub").attr("disabled", false);
+  //           }else{
+  //             // document.getElementById('userexists').innerText = "User Exists";
+  //             $("#modal-notification").modal('show');
+  //             // $("#userexists").removeAttr("hidden");
+  //             $("#userDataSub").html("Submit");
+  //           // $("#userDataSub").attr("disabled", false);
+  //           }
+  //           return false;
+  //         },
+  //         error: function (data) {
+  //           // remove spinner from submit button
+  //           $("#userDataSub").html("Submit");
+  //         //   // enable submit button
+  //           $("#userDataSub").attr("disabled", false);
+  //         },
+  //       });
+  //     });
+  // });
+  </script>
+<script>
+
+function formReset () {
+  document.getElementById("imagetotextForm").reset();
+  document.getElementById("imagetotextFormPan").reset();
+  document.getElementById("userData").reset();
+} 
+</script>
+<script> 
+   $(document).ready(function () { 
+  
+      $("#userData").submit(
+        function (e) {
+        e.preventDefault();
+        var formData = new FormData(this);
+        $("#userDataSub").html(
+          '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...'
+        );
+      //   // disable submit button
+        $("#userDataSub").attr("disabled", true);
+        $.ajax({
+          url: "{% url 'insertintoDatabase' %}",
+          type: "POST",
+          data: formData,
+          cache: false,
+          contentType: false,
+          processData: false,
+          success: function (data) {
+            if (data.ret_val === 0){
+            document.getElementById("mongoid").value = data.vals._id;
+            
+            document.getElementById("mongoid").disabled = true;
+            $("#userID").removeAttr("hidden");
+
+            $("#userDataSub").html("Submit");
+            $("#userData :input").prop("readonly", true);
+            // enable submit button
+            // $("#userDataSub").attr("disabled", false);
+            }else{
+               $("#modal-notification").modal('show');
+              document.getElementById('userexists').innerText = "User Exists";
+              $("#userexists").removeAttr("hidden");
+              $("#userDataSub").html("Submit");
+            $("#userDataSub").attr("disabled", false);
+            }
+            return false;
+          },
+          error: function (data) {
+            // remove spinner from submit button
+            $("#userDataSub").html("Submit");
+          //   // enable submit button
+            $("#userDataSub").attr("disabled", false);
+          },
+        });
+      });
+  });
+  </script> 
+
+<script>
+  $(document).ready(function () {
+
+    $("#search-main").submit(
+      function (e) {
+      e.preventDefault();
+      var formData = new FormData(this);
+      $("#cardSearch").html(
+        '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...'
+      );
+    //   // disable submit button
+      $("#cardSearch").attr("disabled", true);
+      $.ajax({
+        url: "{% url 'searchDatabase' %}",
+        type: "POST",
+        data: formData,
+        cache: false,
+        contentType: false,
+        processData: false,
+        success: function (data) {
+          console.log("{{user.is_superuser}}")
+          if (Object.keys(data.userinfo).length > 0){
+            // console.log(data.userinfo)
+            document.getElementById("mongoid").value = data.userinfo._id;
+            // document.getElementById("recordid").disabled = true;
+            // $("#userData").attr("disabled", true);
+            $("#userID").removeAttr("hidden");
+            document.getElementById("name").value = data.userinfo.user_name;
+            document.getElementById("dob").value = data.userinfo.dob;
+            document.getElementById("gender").value = data.userinfo.gender;
+            document.getElementById("fatherName").value = data.userinfo.fathers_name;
+            document.getElementById("adharNo").value = data.userinfo.adhaar_no;
+            document.getElementById("panNo").value = data.userinfo.pan_no;
+            $("#userData :input").prop("readonly", true);
+            $("#editForm").removeAttr("hidden");
+            if ("{{user.is_superuser}}" === "True"){
+            document.getElementById("recordid").value = data.userinfo._id;
+            $("#userDataDel").removeAttr("hidden");
+            $("#userDataSub").prop("hidden", true);
+            }
+          }
+          $("#cardSearch").html("Search");
+          $("#cardSearch").attr("disabled", false);
+          return false;
+        },
+        error: function (data) {
+          // remove spinner from submit button
+          $("#cardSearch").html("cardSearch");
+        //   // enable submit button
+          $("#userDataSub").attr("disabled", false);
+        },
+      });
+    });
+});
+</script>
+
+<script>
+function formEdit(){
+  $("#userData :input").prop("readonly", false);
+  $("#mongoid").prop("disabled", false);
+  $("#mongoid").prop("readonly", true);
+  // $("#mongoid").prop("disabled", true);
+  $("#editForm").prop("hidden", true);
+  // $("#updateForm").removeAttr("hidden");
+  $("#userDataSub").prop("hidden", false);
+  $("#userDataSub").html("Update")
+}
+
+</script>
+
+    {%endblock %}
+        
+
+    {% include 'includes/scripts.html' %}
+

@@ -1,0 +1,162 @@
+{%extends 'layouts/base.html'%}
+
+{%block content%}
+{% load crispy_forms_tags %}  
+
+         
+<div style=" margin-top: 100px;" >
+    <div class="card mx-auto ">
+        <div class="card-header">
+        <div class="d-flex justify-content-between">
+        <h2  style="padding-top: 25px;" >User List</h2>
+        <!-- <button class="btn btn-secondary col-md-2 mt-3 mb-3 mx-3">Create User</button> -->
+  <button class="btn  btn-primary m-3" data-bs-target="#exampleModal" data-bs-toggle="modal" style="border-radius: 0px;">Create User</button>
+</div></div>
+<div class="card-body">
+    <!-- <div class="text-center"> -->
+      <div style="overflow-x:auto;">
+<table class="table table-hover table-responsive">
+    <thead class="table-dark">
+    <tr>
+      <th>Edit</th>
+        <th class="noExport">Delete</th>
+        <th>id</th>
+        <th>User Name</th>
+        <th>First Name</th>
+        <th>Last Name</th>
+        <th>Email</th>
+        <th>Super User</th>
+        <th>Staff</th>
+        
+    </tr> </thead>
+    {%for user in users%}
+    <tr>
+      {%if user.is_superuser%}
+      <!-- <td> <i class='bx bxs-edit' ></i></td> -->
+      <td> <i class="fa-solid fa-pen-to-square noExport" data-bs-toggle="modal" data-bs-target="#exampleModal"></i></td>
+      <td></td>
+      {%else%}
+      <td><a href="#"><i class="fa-solid fa-pen-to-square"></i></a></td>
+      <td><i class="fa-regular fa-circle-xmark" data-bs-toggle="modal" data-bs-target="#deleteModal" data-id="{{user}}"></i></td>
+      <!-- <td> <i class='bx bxs-edit' ></i></td> -->
+      <div class="modal  fade " id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+              <div class="modal-header border-0">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+
+              </div>
+              <div class="modal-body border-0">
+      <h3 class="text-center text-danger">Delete "{{user.username}}"</h3>
+              </div>
+              <div class="modal-footer border-0">
+      <form action="">
+        <input type="text" value="{{user.id}}" hidden>
+      <button type="submit" class="btn btn-danger">Delete</button>
+      </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      <!-- <td><i class='bx bx-x-circle'></i></td> -->
+      {%endif%} 
+        <td>{{user.id}}</td>
+        <td>{{user.username}}</td>
+        <td>{{user.first_name}}</td>
+        <td>{{user.last_name}}</td>
+        <td>{{user.email}}</td>
+        <td>{% if user.is_superuser%}Yes{%else%}No{%endif%}</td>
+        <td>{% if user.is_staff%}Yes{%else%}No{%endif%}</td>
+        
+
+    </tr>
+    
+    {%endfor%}
+  </table></div></div></div></div>
+
+  
+
+  <div class="modal  fade " id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Create User</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p >
+            <ul id="message"></ul>
+          </p>
+         <form  method="POST" id="createuserform">
+            {%csrf_token%}
+{{form|crispy}}
+
+         </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+          <button type="submit" form="createuserform"  class="btn btn-primary">Register</button>
+        </div>
+      </div>
+    </div>
+  </div> 
+
+
+
+
+  {%endblock%}
+  {%block javascripts%}
+  <script src="https://code.jquery.com/jquery-3.5.1.js" 
+          integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" 
+            crossorigin="anonymous"></script>
+
+  <script>
+    $(document).ready(function () {
+      $("#createuserform").submit(function (e) {
+        e.preventDefault();
+        console.log("started user creation");
+        var formData = new FormData(this);
+        // disable submit button
+        $.ajax({
+          url: "{% url 'create_user' %}",
+          type: "POST",
+          data: formData,
+          cache: false,
+          contentType: false,
+          processData: false,
+          success: function (data) {
+            console.log(data.result)
+            if (data.result === "success"){
+        $("#exampleModal").hide()
+            location.reload(true);
+            }
+            if (data.result === "error"){
+              // console.log(data.message);
+              // document.getElementById("message").html(data.message);
+
+              var paragraph = document.getElementById("message");
+for (const key in data.message){
+  console.log(`${data.message[key]}`);
+              paragraph.innerHTML += "<li class='text-danger'>" + `${data.message[key]}` +"</li>";
+            }
+            } 
+            // remove spinner from submit button
+            // enable submit button
+            // $("#adhar").attr("disabled", false);
+            return false;
+          },
+            error: function (data) {
+// for (const key in data.message){
+//   console.log(`${data.message[key]}`);
+              // document.getElementById("message").html(data.message)
+              // remove spinner from submit button
+              // $("#adhar").html("Submit");
+              // enable submit button
+              // $("#adhar").attr("disabled", false);
+            // }
+          },
+        });
+      });
+    });
+    </script>
+    {%endblock javascripts%}

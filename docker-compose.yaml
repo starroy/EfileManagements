@@ -1,0 +1,58 @@
+version: "3.8"
+services:
+  mysql:
+    image: mysql:8.0.34-debian
+    container_name: mysql_ocr
+    restart: always
+    ports:
+      - "3307:3306"
+    volumes:
+      - db:/var/lib/mysql
+    env_file: .env
+    expose:
+      - "3307"
+    command: mysqld --user=root
+  mongodb:
+    image: mongo:6
+    # depends_on:
+    #   - card_ocr
+    container_name: mongodb_new_ocr
+    # network_mode: "host"
+    ports:
+      - 27019:27018
+    volumes:
+      - dbdata6:/data/db
+    expose:
+      - "27017"
+  appseed-ocr:
+    image: nonameleft/new_document_ocr
+    container_name: appseed_ocr
+    privileged: true
+    restart: always
+    env_file: .env
+    build: .
+    ports:
+      - 8000:8000
+    depends_on:
+      - mongodb
+      - mysql
+    volumes:
+      - .:/code
+      - /tmp/app/mysqld:/var/run/mysqld
+    command: /code/run.sh
+  # nginx:
+  #   container_name: nginx
+  #   restart: always
+  #   image: "nginx:latest"
+  #   ports:
+  #     - "85:85"
+  #   volumes:
+  #     - ./nginx:/etc/nginx/conf.d
+  #   networks:
+  #     - web_network
+  #   depends_on:
+  #     - appseed-app
+
+volumes:
+  dbdata6:
+  db:

@@ -1,0 +1,317 @@
+{%extends 'layouts/base.html'%} {%block content%}
+<div class="card shadow-lg">
+  <div class="card-header text-center">
+    <h2>First Information Report</h2>
+    <h2>पहिली खबर</h2>
+  </div>
+
+  <div class="d-flex flex-nowrap align-items-center gap-4 mx-4 mt-4">
+    <label for="lang" class="form-label nowrap">Choose Language:</label>
+    <div class="col-md-2">
+    <select name="lang" id="lang" class="form-control col-md-2">
+        <option value="en" selected>English</option>
+        <option value="hi">Hindi</option>
+        <option value="mr">Marathi</option>
+    </select></div> </div>
+
+  <div class="card-body">
+    <form
+      action="{%url 'firform'%}"
+      class="form-control border-0 border-opacity-0"
+      id="fir"
+      method="POST"
+    >
+    <div class="form-group">
+    <div class="d-flex flex-row gap-3 col-md-12 justify-content-between my-3">
+        1.
+        <!-- <div>   </div> -->
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <div class="d-flex flex-column nowrap">
+        <label for="dist" class="form-label" style="margin-top: -5px;">Dist</label>
+        <label for="dist" class="form-label" style="margin-top: -10px;">जिल्हा</label> 
+    </div>
+    <input type="text" class="form-control" style="height: 2em;" id="dist" name="dist">
+    <div class="d-flex flex-column text-nowrap">
+        <label for="ps" class="form-label" style="margin-top: -5px;">PS</label>
+        <label for="ps" class="form-label nowrap " style="margin-top: -10px;">पोलीस ठाणे</label> 
+    </div>
+    <input type="text" class="form-control" style="height: 2em;" id="ps" name="ps">
+    <div class="d-flex flex-column text-nowrap">
+        <label for="year" class="form-label" style="margin-top: -5px;">Year</label>
+        <label for="year" class="form-label nowrap" style="margin-top: -10px;">वर्ष</label> 
+    </div>
+    <input type="text" class="form-control" style="height: 2em;" id="year" name="year">
+    <div class="d-flex flex-column text-nowrap ">
+        <label for="firNo" class="form-label" style="margin-top: -5px;">FIR No</label>
+        <label for="firNo" class="form-label nowrap" style="margin-top: -10px;">पहिली खबर क्र </label> 
+    </div>
+    <input type="text" class="form-control" style="height: 2em;" id="firNo" name="firNo">
+    <div class="d-flex flex-column text-nowrap">
+        <label for="firDate" class="form-label" style="margin-top: -5px;">Date</label>
+        <label for="firDate" class="form-label nowrap" style="margin-top: -10px;">तारीख</label> 
+    </div>
+    <input type="text" class="form-control" style="height: 2em;" id="firDate" name="firDate">    
+</div>
+<div class="d-flex flex-row gap-3 col-md-12 text-nowrap mb-2">
+     2. (i)
+    <div class="d-flex flex-column nowrap">
+    <label for="act1" class="form-label" style="margin-top: -5px;">Act.</label>
+    <label for="act1" class="form-label" style="margin-top: -10px;">अधिनियम</label> 
+</div>
+<input type="text" class="form-control" style="height: 2em;" id="act1" name="act1">
+<div class="d-flex flex-column text-nowrap">
+    <label for="sections1" class="form-label" style="margin-top: -5px;">Sections</label>
+    <label for="sections1" class="form-label nowrap " style="margin-top: -10px;">कलमे</label> 
+</div>
+<input type="text" class="form-control" style="height: 2em;" id="sections1" name="sections1">
+</div>
+<div class="d-flex flex-row gap-3 col-md-12 text-nowrap mb-2">
+    &nbsp; &nbsp; (ii)
+   <div class="d-flex flex-column nowrap">
+   <label for="act2" class="form-label" style="margin-top: -5px;">Act.</label>
+   <label for="act2" class="form-label" style="margin-top: -10px;">अधिनियम</label> 
+</div>
+<input type="text" class="form-control" style="height: 2em;" id="act2" name="act2">
+<div class="d-flex flex-column text-nowrap">
+   <label for="sections2" class="form-label" style="margin-top: -5px;">Sections</label>
+   <label for="sections2" class="form-label nowrap " style="margin-top: -10px;">कलमे</label> 
+</div>
+<input type="text" class="form-control" style="height: 2em;" id="sections2" name="sections2">
+</div>
+<div class="d-flex flex-row gap-3 col-md-12 text-nowrap mb-2">
+    &nbsp;&nbsp; (iii)
+   <div class="d-flex flex-column nowrap">
+   <label for="act3" class="form-label" style="margin-top: -5px;">Act.</label>
+   <label for="act3" class="form-label" style="margin-top: -10px;">अधिनियम</label> 
+</div>
+<input type="text" class="form-control" style="height: 2em;" id="act3" name="act3">
+<div class="d-flex flex-column text-nowrap">
+   <label for="sections3" class="form-label" style="margin-top: -5px;">Sections</label>
+   <label for="sections3" class="form-label nowrap " style="margin-top: -10px;">कलमे</label> 
+</div>
+<input type="text" class="form-control" style="height: 2em;" id="sections3" name="sections3">
+</div>
+<div class="d-flex flex-row gap-3 col-md-12 text-nowrap mb-2">
+    &nbsp;&nbsp; (iv)
+   <div class="d-flex flex-column nowrap">
+   <label for="act4" class="form-label" style="margin-top: -5px;">Other Act. & Sections</label>
+   <label for="act4" class="form-label" style="margin-top: -10px;">इतर अधिनियम व कलमे</label> 
+</div>
+<input type="text" class="form-control" style="height: 2em;" id="act4" name="act4">
+</div>
+<div class="d-flex flex-row gap-3 col-md-12 text-nowrap mb-2">
+    3. (a)  <div class="d-flex flex-column nowrap " style="margin-top: -5px;">
+        Occurance of Offence: <br>
+        अपराधाची घटना
+    </div>
+   <div class="d-flex flex-column nowrap">
+   <label for="day" class="form-label" style="margin-top: -5px;">Day</label>
+   <label for="day" class="form-label" style="margin-top: -10px;">वार</label> 
+</div>
+<input type="text" class="form-control" style="height: 2em;" id="day" name="day">
+<div class="d-flex flex-column nowrap">
+    <label for="dateFrom" class="form-label" style="margin-top: -5px;">Date From</label>
+    <label for="dateFrom" class="form-label" style="margin-top: -10px;">तारीख पासून</label> 
+ </div>
+<input type="text" class="form-control" style="height: 2em;" id="dateFrom" name="dateFrom">
+<div class="d-flex flex-column nowrap">
+    <label for="dateTo" class="form-label" style="margin-top: -5px;">Date To</label>
+    <label for="dateTo" class="form-label" style="margin-top: -10px;">तारीख पर्यंत</label> 
+ </div>
+<input type="text" class="form-control" style="height: 2em;" id="dateTo" name="dateTo">
+</div>
+<div class="d-flex flex-row gap-3 col-md-12 text-nowrap mb-2">
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+   <div class="d-flex flex-column nowrap">
+   <label for="timePeriod" class="form-label" style="margin-top: -5px;">Time Period</label>
+   <label for="timePeriod" class="form-label" style="margin-top: -10px;">वेळेचा अवधी</label> 
+</div>
+<input type="text" class="form-control" style="height: 2em;" id="timePeriod" name="timePeriod">
+<div class="d-flex flex-column nowrap">
+    <label for="timeFrom" class="form-label" style="margin-top: -5px;">Time From</label>
+    <label for="timeFrom" class="form-label" style="margin-top: -10px;">पासून</label> 
+ </div>
+<input type="text" class="form-control" style="height: 2em;" id="timeFrom" name="timeFrom">
+<div class="d-flex flex-column nowrap">
+    <label for="timeTo" class="form-label" style="margin-top: -5px;">Time To</label>
+    <label for="timeTo" class="form-label" style="margin-top: -10px;">पर्यंत</label> 
+ </div>
+<input type="text" class="form-control" style="height: 2em;" id="timeTo" name="timeTo">
+</div>
+<div class="d-flex flex-row gap-3 col-md-12 text-nowrap mb-2">
+&nbsp; &nbsp;&nbsp;(b)  
+<div class="d-flex flex-column nowrap">
+<label for="recvDate" class="form-label" style="margin-top: -5px;">Information received at P.S. Date</label>
+<label for="recvDate" class="form-label" style="margin-top: -10px;">पोलीस ठाण्यावर माहिती मिळण्याची तारीख</label> 
+</div>
+<input type="text" class="form-control" style="height: 2em;" id="recvDate" name="recvDate">
+<div class="d-flex flex-column nowrap">
+<label for="recvTime" class="form-label" style="margin-top: -5px;">Time</label>
+<label for="recvTime" class="form-label" style="margin-top: -10px;">वेळ</label> 
+</div>
+<input type="text" class="form-control" style="height: 2em;" id="recvTime" name="recvTime">
+</div>
+<div class="d-flex flex-row gap-3 col-md-12 text-nowrap mb-2">
+    &nbsp; &nbsp;&nbsp;(c)  
+    <div class="d-flex flex-column nowrap">
+    <label for="refNo" class="form-label" style="margin-top: -5px;">General Diary Reference Entry No(s)</label>
+    <label for="refNo" class="form-label" style="margin-top: -10px;">सर्वसाधरण रोजनिशीचा संदर्भ क्र.</label> 
+    </div>
+    <input type="text" class="form-control" style="height: 2em;" id="refNo" name="refNo">
+    <div class="d-flex flex-column nowrap">
+    <label for="refTime" class="form-label" style="margin-top: -5px;">Time</label>
+    <label for="refTime" class="form-label" style="margin-top: -10px;">वेळ</label> 
+    </div>
+    <input type="text" class="form-control" style="height: 2em;" id="refTime" name="refTime">
+    </div>
+    <div class="d-flex flex-row gap-3 col-md-12 text-nowrap mb-2">
+        4.   
+        <div class="d-flex flex-column nowrap">
+        <label for="infoType" class="form-label" style="margin-top: -5px;">Type of Information</label>
+        <label for="infoType" class="form-label" style="margin-top: -10px;">माहितीचा प्रकार</label> 
+        </div>
+        <input type="text" class="form-control" style="height: 2em;" id="infoType" name="infoType">
+        <div class="d-flex flex-column nowrap">
+        <label for="writtenOral" class="form-label" style="margin-top: -5px;">Written / Oral</label>
+        <label for="writtenOral" class="form-label" style="margin-top: -10px;">लेखी / तोंडी</label> 
+        </div>
+        <input type="text" class="form-control" style="height: 2em;" id="writtenOral" name="writtenOral">
+        </div>
+        <div class="d-flex flex-row gap-3 col-md-12 text-nowrap mb-2">
+            5.  <div class="d-flex flex-column nowrap " style="margin-top: -5px;">
+                Place of Occurance: <br>
+               घटनेचे ठिकाण
+            </div>
+            <div class="d-flex flex-column nowrap " style="margin-top: -5px;">
+           (a) Direction and Distance from P.S. <br>
+            &nbsp;&nbsp;&nbsp;&nbsp; पोलिस ठाणे पासून दिशा आणि अंतर 
+            </div>
+        <input type="text" class="form-control" style="height: 2em;" id="direction" name="direction">
+            <div class="d-flex flex-column nowrap " style="margin-top: -5px;">
+            Beat. No. <br>
+            गस्तक्षेत्र क्र.
+            </div>
+
+        <input type="text" class="form-control" style="height: 2em;" id="beatNo" name="beatNo">
+        </div>
+            <div class="d-flex flex-row gap-3 col-md-12 text-nowrap mb-2">
+                (b)
+        <div class="d-flex flex-column nowrap " style="margin-top: -5px;">
+                Address <br>
+                पत्ता
+        </div>
+        <textarea name="address" id="address" cols="30" rows="10" class="form-control"></textarea>
+        </div>
+        <div class="d-flex flex-row gap-3 my-3">
+        <button class="btn btn-primary" type="submit">Submit</button>
+        <a class="btn btn-primary" href="{%url 'firform'%}">Reset</a>
+</div>
+    </form>
+  </div>
+</div>
+<script>
+    if ("webkitSpeechRecognition" in window) {
+      // Initialize webkitSpeechRecognition
+      let speechRecognition = new webkitSpeechRecognition();
+      var recog = false;
+      var opId = "";
+      var intId = "";
+      // String for the Final Transcript
+      let final_transcript = "";
+  
+      // Set the properties for the Speech Recognition object
+      speechRecognition.continuous = true;
+      speechRecognition.interimResults = true;
+      speechRecognition.maxAlternatives = 0;
+      // speechRecognition.lang = document.querySelector("#select_dialect").value;
+      speechRecognition.lang = "en";
+      // Callback Function for the onStart Event
+      speechRecognition.onstart = () => {
+        // Show the Status Element
+        document.querySelector("#status").style.display = "Listening";
+      };
+      speechRecognition.onerror = () => {
+        // Hide the Status Element
+        document.querySelector("#status").style.display = "Error";
+      };
+      speechRecognition.onend = () => {
+        // Hide the Status Element
+        document.querySelector("#status").style.display = "End";
+      };
+  
+      speechRecognition.onresult = (event) => {
+        // Create the interim transcript string locally because we don't want it to persist like final transcript
+        let interim_transcript = "";
+  
+        // Loop through the results from the speech recognition object.
+        for (let i = event.resultIndex; i < event.results.length; ++i) {
+          // If the result item is Final, add it to Final Transcript, Else add it to Interim transcript
+          if (event.results[i].isFinal) {
+            final_transcript += event.results[i][0].transcript;
+          } else {
+            console.log("interim");
+            interim_transcript += event.results[i][0].transcript;
+          }
+        }
+  
+        // Set the Final transcript and Interim transcript.
+        document.querySelector(opId).value = final_transcript;
+        // document.querySelector(opId).value = final_transcript;
+        document.querySelector(intId).innerHTML = interim_transcript;
+        console.log(interim_transcript);
+      };
+      idArr = [
+        "#dist",
+        "#ps",
+        "#year",
+        "#firNo",
+        "#firDate",
+        "#act1",
+        "#act2",
+        "#act3",
+        "#act4",
+        "#sections1",
+        "#sections2",
+        "#sections3",
+        "#address",
+        "#day",
+        "#dateFrom",
+        "#dateTo",
+        "#timePeriod",
+        "#timeFrom",
+        "#timeTo",
+        "#recvDate",
+        "#recvTime",
+        "#refNo",
+        "#refTime",
+        "#infoType",
+        "#writtenOral",
+        "#direction",
+        "#beatNo",
+      ];
+      for (let j = 0; j < idArr.length; j++) {
+        // Set the onClick property of the start button
+        document.querySelector(idArr[j]).ondblclick = () => {
+          // Start the Speech Recognition
+          // speechRecognition.lang = "en";
+        speechRecognition.lang = document.getElementById('lang').value;
+  
+          if (!recog) {
+            opId = idArr[j];
+            intId = "#interim" + (j + 1);
+            final_transcript = "";
+            speechRecognition.start();
+            recog = true;
+          } else {
+            opId = idArr[j];
+            speechRecognition.stop();
+            recog = false;
+          }
+        };
+      }
+    } else {
+      console.log("Speech Recognition Not Available");
+    }
+    // Set the onClick property of the stop button
+  </script>
+{%endblock%}

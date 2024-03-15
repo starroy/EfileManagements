@@ -1,0 +1,18 @@
+#!/bin/bash
+cd /code
+# systemctl disable mysql
+systemctl enable mysql --now
+export DJANGO_SUPERUSER_USERNAME=admin
+export DJANGO_SUPERUSER_PASSWORD=admin123
+# python3 manage.py migrate;
+#
+python3 manage.py makemigrations
+#
+python3 manage.py migrate
+#
+# python3 manage.py collectstatic --clear;
+
+# python3 manage.py createsuperuser --no-input || true;
+# python3 create_admin.py
+
+ python manage.py runserver 0.0.0.0:8000

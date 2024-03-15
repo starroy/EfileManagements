@@ -1,0 +1,455 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Dashboard {% endblock %} 
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+<div class="d-flex gap-3 justify-content-around text-nowrap col-md-12">
+    <iframe name="votar" style="display:none;"></iframe>
+
+  <form
+      method="post"
+    id="docUploadForm"
+    enctype="multipart/form-data"
+    action="{%url 'imageUpload'%}"
+  >
+    {% csrf_token %}
+    <!-- <div class="col-md-12"> -->
+    <div class="form-group">
+      <label for="image">Upload Document Image</label>
+      <input
+        type="file"
+        class="form-control"
+        name="image"
+        id="image"
+        placeholder="Image"
+        accept="image/*"
+      />
+    </div>
+
+    <button type="submit" class="btn btn-primary btn-submit mt-4 mb-4" id="docFile" {%if status%} disabled {%endif%}>
+      Submit
+    </button>
+    <button type="submit" formaction="{%url 'selectText'%}" class="btn btn-primary btn-submit mt-4 mb-4" id="docFile">
+        Reset
+      </button> 
+</form>
+</div>
+  <header id="pageHeader" class="position-absolute w-100 bg-white">
+    <!-- Navbar -->
+    <!-- Fixed navbar -->
+
+</header>
+
+<main class="flex-shrink-0">
+<!-- Start Main content -->
+
+<div class="container">
+<!-- <div>
+<ol class="breadcrumb small">
+<li class="breadcrumb-item"><a href="/">Home</a></li>
+<li class="breadcrumb-item"><a href="/bo/listuploads">List of uploads</a></li>
+<li class="breadcrumb-item" aria-current="page">Thhumbnail selection test</li>
+</ol>
+</div> -->
+<div class="form-control mt-3 mb-3" {%if not result%}hidden{%endif%}>
+  <form>
+    <!-- <div class="mb-3 mt-2 row"> -->
+      <label for="thb_bottom" class="col-sm-4 col-form-label">Extracted Text</label>
+      <!-- <div class="col-sm-8"> -->
+        <text-area class="form-control" rows="10" cols="50" id="extractedText" name="extracted"  readonly>{%if result%}{{result}}{%endif%}</text-area>
+      <!-- </div> -->
+      <!-- </div> -->
+      </form>
+      </div>
+<div class="row mb-4 justify-content-center">
+<div class="col-md-8" id="theImage">
+    {% if status %}
+<img id="full-image" src="data:image/jpg;base64, {{bytes}}"  class="card-img-top" alt="" style="position:relative" {%if not status%} disabled {%endif%}}>
+<canvas id="canvas" style="position:absolute; left: 0px; top: 0px; overflow:auto;" ></canvas>
+{%endif%}
+</div>
+<div class="col-md-4 mt-3 mt-md-0">
+<!-- <h2>Thumbnail selection (test)</h2>
+<p>This demo page shows how the thumbnail's squared interactive selection works.</p>
+<p>The square "follows" the image even when the image size changes (resize the browser's window to see the outcomes).</p>
+
+<p>The coordinates of the selection change dynamically.</p> -->
+<form 
+      method="post"
+    id="imageboxForm"
+    enctype="multipart/form-data"
+    action="{%url 'selectText'%}"
+    >
+    {%csrf_token%}
+<div class="mb-1 row">
+    <label for="imgBytes" class="col-sm-4 col-form-label" hidden>Image</label>
+
+    <div class="col-sm-8">
+        <input class="form-control" type="text" id="imgBytes" name="imgBytes" hidden readonly value={{bytes}} >
+      </div>
+      </div>
+      <div class="mb-1 row">
+
+<label for="thb_left" class="col-sm-4 col-form-label" hidden>Left</label>
+<div class="col-sm-8">
+  <input class="form-control" type="text" id="thb_left" name="thb_left" value="0" readonly hidden>
+</div>
+</div>
+<div class="mb-1 row">
+<label for="thb_top" class="col-sm-4 col-form-label" hidden>Top</label>
+<div class="col-sm-8">
+  <input class="form-control" type="text" id="thb_top" name="thb_top" value="0" hidden readonly>
+</div>
+</div>
+<div class="mb-1 row">
+<label for="thb_right" class="col-sm-4 col-form-label" hidden>Right</label>
+<div class="col-sm-8">
+  <input class="form-control" type="text" id="thb_right" name="thb_right" value="0" readonly hidden>
+</div>
+</div>
+<div class="mb-3 row">
+<label for="thb_bottom" class="col-sm-4 col-form-label" hidden>Bottom</label>
+<div class="col-sm-8">
+  <input class="form-control" type="text" id="thb_bottom" name="thb_bottom" value="0" hidden readonly>
+</div>
+</div>
+
+<div class="row">
+<div class="col-12 text-center">
+  <!-- <a href="/bo/listuploads" class="btn btn-primary">Go to the list of uploads</a>         -->
+  <button type="submit" class="btn btn-primary"> Process Image</button> 
+</div>
+</div>
+</form>
+</div>
+
+</div>
+
+</div>
+<script>
+
+var image = document.getElementById('full-image');
+  var canvas = document.getElementById('canvas')
+  
+  //hidden or text inputs
+  var h_th_left = document.getElementById('thb_left')
+  var h_th_top = document.getElementById('thb_top')
+  var h_th_right = document.getElementById('thb_right')
+  var h_th_bottom = document.getElementById('thb_bottom')
+
+  var handleRadius = 10
+
+  var dragTL = dragBL = dragTR = dragBR = false;
+  var dragWholeRect = false;
+
+  var rect={}
+  var current_canvas_rect={}
+
+  var mouseX, mouseY
+  var startX, startY
+
+  // var th_left = 150;
+  // var th_top = 896;
+  // var th_right = 2009;
+  // var th_bottom = 2753;
+  // var th_left = 0;
+  // var th_top = 0;
+  var th_left = 50;
+  var th_top = 96;
+  var th_right = {{width}} - 100;
+  var th_bottom = {{height}} - 100;
+
+  var th_width = th_right - th_left;
+  var th_height = th_bottom - th_top;
+
+  // var effective_image_width = 4032;
+  // var effective_image_height = 3024;
+  var effective_image_width = {{width}};
+  var effective_image_height = {{height}};
+//  console.log(image.width, image.height) 
+  //drawRectInCanvas() connected functions -- START
+  function updateHiddenInputs(){
+
+    var inverse_ratio_w =  effective_image_width / canvas.width;
+    var inverse_ratio_h = effective_image_height / canvas.height ;
+    // var inverse_ratio_w = 1 
+    // var inverse_ratio_h = 1 
+
+    h_th_left.value = Math.round(rect.left * inverse_ratio_w)
+    h_th_top.value = Math.round(rect.top * inverse_ratio_h)
+    h_th_right.value = Math.round((rect.left + rect.width) * inverse_ratio_w)
+    h_th_bottom.value = Math.round((rect.top + rect.height) * inverse_ratio_h)
+
+  }
+  
+  function drawCircle(x, y, radius) {
+    var ctx = canvas.getContext("2d");
+
+    ctx.fillStyle = "#c757e7";
+    ctx.beginPath();
+    ctx.arc(x, y, radius, 0, 2 * Math.PI);
+    ctx.fill();
+  }
+
+  function drawHandles() {
+    drawCircle(rect.left, rect.top, handleRadius);
+    drawCircle(rect.left + rect.width, rect.top, handleRadius);
+    drawCircle(rect.left + rect.width, rect.top + rect.height, handleRadius);
+    drawCircle(rect.left, rect.top + rect.height, handleRadius);
+  }
+
+
+  function drawRectInCanvas()
+  {
+
+    var ctx = canvas.getContext("2d");
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    ctx.beginPath();
+    ctx.lineWidth = "6";
+    ctx.fillStyle = "rgba(199, 87, 231, 0.2)";
+    ctx.strokeStyle = "#c757e7";
+    ctx.rect(rect.left, rect.top, rect.width, rect.height);
+    ctx.fill();
+    ctx.stroke();
+    
+
+    drawHandles();
+    updateHiddenInputs()
+
+  }
+  //drawRectInCanvas() connected functions -- END
+
+  function mouseUp(e) {
+    console.log('MOUSE UP!');
+    dragTL = dragTR = dragBL = dragBR = false;
+    dragWholeRect = false;
+  }
+
+  //mousedown connected functions -- START
+  function checkInRect(x, y, r) {
+    console.log(x,y,r.left,r.right);
+    return (x>r.left && x<(r.width+r.left)) && (y>r.top && y<(r.top+r.height));
+  }
+
+  function checkCloseEnough(p1, p2) {
+    return Math.abs(p1 - p2) < handleRadius;
+  }
+
+  function getMousePos(canvas, evt) {
+
+    var clx, cly
+    if (evt.type == "touchstart" || evt.type == "touchmove") {
+      clx = evt.touches[0].clientX;
+      cly = evt.touches[0].clientY;
+    } else {
+      clx = evt.clientX;
+      cly = evt.clientY;
+    }
+
+    var boundingRect = canvas.getBoundingClientRect();
+    return {
+      x: clx - boundingRect.left,
+      y: cly - boundingRect.top
+    };
+
+  }
+  
+  function mouseDown(e) {
+    var pos = getMousePos(this,e);
+
+    //mouseX = e.pageX - this.offsetLeft;
+    mouseX = pos.x;
+    mouseY = pos.y;
+    //mouseY = e.pageY - this.offsetTop;
+    
+    // 0. inside movable rectangle
+    if (checkInRect(mouseX, mouseY, rect)){
+        dragWholeRect=true;
+        startX = mouseX;
+        startY = mouseY;
+        console.log('dragWholeRect');
+    }
+    // 1. top left
+    else if (checkCloseEnough(mouseX, rect.left) && checkCloseEnough(mouseY, rect.top)) {
+        dragTL = true;
+        console.log('dragTL');
+    }
+    // 2. top right
+    else if (checkCloseEnough(mouseX, rect.left + rect.width) && checkCloseEnough(mouseY, rect.top)) {
+        dragTR = true;
+        console.log('dragTR');
+    }
+    // 3. bottom left
+    else if (checkCloseEnough(mouseX, rect.left) && checkCloseEnough(mouseY, rect.top + rect.height)) {
+        dragBL = true;
+        console.log('dragBL');
+    }
+    // 4. bottom right
+    else if (checkCloseEnough(mouseX, rect.left + rect.width) && checkCloseEnough(mouseY, rect.top + rect.height)) {
+        dragBR = true;
+        console.log('dragBR');
+    }
+    // (5.) none of them
+    else {
+        // handle not resizing
+    }
+
+    drawRectInCanvas();
+
+  }
+  //mousedown connected functions -- END
+
+  function mouseMove(e) {
+    
+    var pos = getMousePos(this,e);
+    mouseX = pos.x;
+    mouseY = pos.y;
+
+    //console.log(mouseX, mouseY)
+    
+
+    if (dragWholeRect) {
+        e.preventDefault();
+        e.stopPropagation();
+        dx = mouseX - startX;
+        dy = mouseY - startY;
+        if ((rect.left+dx)>0 && (rect.left+dx+rect.width)<canvas.width){
+          rect.left += dx;
+        }
+        if ((rect.top+dy)>0 && (rect.top+dy+rect.height)<canvas.height){
+          rect.top += dy;
+        }
+        startX = mouseX;
+        startY = mouseY;
+    } else if (dragTL) {
+        e.preventDefault();
+        e.stopPropagation();
+        var newSide = (Math.abs(rect.left+rect.width - mouseX)+Math.abs(rect.height + rect.top - mouseY))/2;
+        if (newSide>150){
+          rect.left = rect.left + rect.width - newSide;
+          rect.top = rect.height + rect.top - newSide;
+          rect.width = rect.height = newSide;
+        }
+    } else if (dragTR) {
+        e.preventDefault();
+        e.stopPropagation();
+        var newSide = (Math.abs(mouseX-rect.left)+Math.abs(rect.height + rect.top - mouseY))/2;
+        if (newSide>150){
+            rect.top = rect.height + rect.top - newSide;
+            rect.width = rect.height = newSide;
+        }
+    } else if (dragBL) {
+        e.preventDefault();
+        e.stopPropagation();
+        var newSide = (Math.abs(rect.left+rect.width - mouseX)+Math.abs(rect.top - mouseY))/2;
+        if (newSide>150)
+        {
+          rect.left = rect.left + rect.width - newSide;
+          rect.width = rect.height = newSide;
+        }
+    } else if (dragBR) {
+        e.preventDefault();
+        e.stopPropagation();
+        var newSide = (Math.abs(rect.left - mouseX)+Math.abs(rect.top - mouseY))/2;
+        if (newSide>150)
+        {
+         rect.width = rect.height = newSide;
+        }      
+    }
+
+    drawRectInCanvas();
+  }
+
+  function updateCurrentCanvasRect(){
+    current_canvas_rect.height = canvas.height
+    current_canvas_rect.width = canvas.width
+    current_canvas_rect.top = image.offsetTop
+    current_canvas_rect.left = image.offsetLeft
+  }
+
+
+  function repositionCanvas(){
+
+    //make canvas same as image, which may have changed size and position
+    canvas.height = image.height;
+    canvas.width = image.width;
+    canvas.style.top = image.offsetTop + "px";;
+    canvas.style.left = image.offsetLeft + "px";
+    console.log(canvas.height)
+    //compute ratio comparing the NEW canvas rect with the OLD (current)
+    var ratio_w = canvas.width / current_canvas_rect.width;
+    var ratio_h = canvas.height / current_canvas_rect.height;
+// ratio_h = 1
+// ratio_w = 1
+    //update rect coordinates
+    rect.top = rect.top * ratio_h;
+    rect.left = rect.left * ratio_w;
+    rect.height = rect.height * ratio_h;
+    rect.width = rect.width * ratio_w;
+    console.log(rect.height)
+    // rect.top = rect.top ;
+    // rect.left = rect.left ;
+    // rect.height = rect.height;
+    // rect.width = rect.width;
+    
+    updateCurrentCanvasRect();
+
+    drawRectInCanvas();
+
+  }
+
+
+  function initCanvas(){
+    canvas.height = image.height;
+    canvas.width = image.width;
+    canvas.style.top = image.offsetTop + "px";;
+    canvas.style.left = image.offsetLeft + "px";
+    updateCurrentCanvasRect();
+  }
+
+  function initRect(){
+
+    var ratio_w = canvas.width / effective_image_width;
+    var ratio_h = canvas.height / effective_image_height;
+// ratio_h = 1
+// ratio_w = 1
+    //BORDER OF SIZE 6!
+    rect.height = th_height*ratio_h-6
+    rect.width = th_width*ratio_w-6
+    rect.top = th_top*ratio_h+3
+    rect.left = th_left*ratio_w+3
+    // rect.height = th_height-6
+    // rect.width = th_width-6
+    // rect.top = th_top+3
+    // rect.left = th_left+3
+
+  }
+  
+
+  function init(){
+    canvas.addEventListener('mousedown', mouseDown, false);
+    canvas.addEventListener('mouseup', mouseUp, false);
+    canvas.addEventListener('mousemove', mouseMove, false);
+
+    canvas.addEventListener('touchstart', mouseDown);
+    canvas.addEventListener('touchmove', mouseMove);
+    canvas.addEventListener('touchend', mouseUp);
+
+    initCanvas();
+    initRect();
+
+    drawRectInCanvas();
+  }
+
+  window.addEventListener('load',init)
+  window.addEventListener('resize',repositionCanvas)
+
+  </script>    
+    {%endblock %}
+    {% include 'includes/scripts.html' %}
+ 
