@@ -13,7 +13,9 @@ RUN apt -y upgrade
 RUN apt install -y python3-pip  \
 libgl1 ffmpeg libsm6 libxext6 git pkg-config default-libmysqlclient-dev
 COPY requirements.txt /tmp/requirements.txt
-
+# added copy source for windows
+RUN mkdir /code
+COPY . /code/
 # install python dependencies
 RUN pip install --upgrade pip
 RUN pip install --no-cache-dir -r /tmp/requirements.txt

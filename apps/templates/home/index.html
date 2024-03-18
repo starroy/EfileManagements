@@ -265,15 +265,17 @@
           </div>
       </div>
   </div>
- <script src="https://code.jquery.com/jquery-3.5.1.js" 
-          integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" 
-            crossorigin="anonymous"></script>
+ <!-- <script src="https://code.jquery.com/jquery-3.5.1.js"  -->
+ <!--          integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="  -->
+ <!--            crossorigin="anonymous"></script> -->
+<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 
     <script>
       $(document).ready(function () {
         $("#imagetotextForm").submit(function (e) {
           e.preventDefault();
           var formData = new FormData(this);
+          console.log("submission started")
           $("#adhar").html(
             '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...'
           );
@@ -540,6 +542,45 @@ function formEdit(){
 }
 
 </script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<link
+  rel="stylesheet"
+  href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css"
+/>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+<script> 
+ //   var cardType = "adhar"; -->
+ //   $("input[name=flexRadioDefault]").change(function () { -->
+ //     cardType = $("input[name=flexRadioDefault]:checked").val(); -->
+ //     console.log(cardType); -->
+ //   }); -->
+ //   console.log(cardType); -->
+ //   if (cardType === "adhar") { -->
+     $(function () { 
+       $("#searchBar").autocomplete({ 
+         source: function (request, response) { 
+           $.ajax({ 
+             url: "{% url 'adhar-autocomplete' %}", 
+         dataType: "json", 
+             data: { 
+               term: request.term, 
+               cardType: $("input[name=searchCard]:checked").val(), 
+             }, 
+             success: function (data) { 
+               response(data); 
+               console.log(data)
+             }, 
+           }); 
+         }, 
+
+         minLength: 3, // Minimum characters before triggering autocomplete -->
+       }); 
+     }); 
+ //   } else { 
+     // console.log("Pan"); 
+ //   } 
+ </script>
 
     {%endblock %}
         

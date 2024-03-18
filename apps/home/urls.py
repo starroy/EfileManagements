@@ -16,6 +16,8 @@ urlpatterns = [
     path("verifyexists", views.verify_exists, name="verifyexists"),
     path("searchDatabase", views.search_database, name="searchDatabase"),
     path("deleterecord", views.delete_record, name="deleterecord"),
+    path('autocomplete', views.AdharAutocomplete, name="adhar-autocomplete"),
+
 
     path("selectText", views.select_text, name="selectText"),
     path("selectTextCropper", views.select_cropper, name="selectTextCropper"),
@@ -23,6 +25,8 @@ urlpatterns = [
     path("imageUpload", views.image_upload, name="imageUpload"),
     path("speechToText", views.speech_to_text, name="speechToText"),
     path("speechToTextNew", views.speech_to_text_new, name="speechToTextNew"),
+    path("mahadiscomreg", views.mahadiscomreg, name="mahadiscomreg"),
+    path("firform", views.fir, name="firform"),
     # Matches any html file
     re_path(r"^.*\.*", views.pages, name="pages"),
 ]
