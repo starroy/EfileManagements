@@ -21,6 +21,14 @@ from PIL import Image
 from ultralytics import YOLO
 from django.core.files import File
 from io import BytesIO
+from django.views import View
+# from googletrans import Translator
+from datetime import datetime
+from django.shortcuts import render
+
+def show_date(request):
+    today_date = datetime.now().date()
+    return render(request, 'index.html', {'today_date': today_date})
 
 
 
@@ -31,8 +39,10 @@ from .mongo_update import insert_record
 client = pymongo.MongoClient("mongodb://mongodb_new_ocr:27017/")
 # client = pymongo.MongoClient("mongodb://localhost:27017/")
 db = client["userdata"]
+db_forms = client["forms"]
 
 
+# ------- Admin --------------------
 @login_required(login_url="/login/")
 def index(request):
     context = {"segment": "index"}
@@ -64,6 +74,8 @@ def pages(request):
         html_template = loader.get_template("home/page-500.html")
         return HttpResponse(html_template.render(context, request))
 
+
+# ----------------------- Adhaar / Pan -------------------------
 
 @login_required(login_url="/login/")
 def imagetoText(request):
@@ -305,6 +317,31 @@ def delete_record(request):
         return render(request, "home/index.html")
 
 
+# class AdharAutocomplete(View):
+    # def get(self, request):
+@login_required(login_url='/login/')
+def AdharAutocomplete(request):
+    if request.method == 'GET':
+        query_data = request.GET.get('term', '').upper()
+        card_type = request.GET.get('cardType', '')
+        print(card_type)
+        query_string = {'$regex' : f'^{query_data}'}
+        if card_type == "adhar":
+            data_list = list(db.userdata.find({"adhaar_no": query_string},{"adhaar_no": 1}))
+            data_list = data_list[:min(10, len(data_list))]
+            result = [data['adhaar_no'] for data in data_list]
+            print(result)
+        elif card_type == "pan":
+            data_list = list(db.userdata.find({"pan_no": query_string},{"pan_no": 1}))
+            data_list = data_list[:min(10, len(data_list))]
+            result = [data['pan_no'] for data in data_list]
+        else:
+            result = []
+        # print(query_data)
+        return JsonResponse(result, safe=False)
+
+# --------------------- Selection OCR -----------------------
+
 @login_required(login_url="/login/")
 def select_text(request):
     if request.method == "POST":
@@ -423,6 +460,8 @@ def select_ocr(request):
         return render(request, "home/select-ocr-done.html", {"imageBytes": img64, "result": r_string})
 
 
+
+# ------------------ Speech to Text -----------------------
 @login_required(login_url="/login/")
 def speech_to_text(request):
     return render(request, "home/speech-to-text.html")
@@ -430,3 +469,66 @@ def speech_to_text(request):
 @login_required(login_url="/login/")
 def speech_to_text_new(request):
     return render(request, "home/speech-to-text-new.html")
+
+
+@login_required(login_url="/login/")
+def mahadiscomreg(request):
+    if request.method == "POST":
+        data = {}
+        data["consumerType"] = request.POST["consumerType"]
+        data["consumerNo"] = request.POST["consumerNo"]
+        data["bu"] = request.POST["bu"]
+        data["actType"] = request.POST["actType"]
+        data["firstName"] = request.POST["firstName"]
+        data["middleName"] = request.POST["middleName"]
+        data["lastName"] = request.POST["lastName"]
+        data["adhaar_no"] = request.POST["uid"]
+        data["gender"] = request.POST["gender"]
+        data["maritalStatus"] = request.POST["maritalStatus"]
+        data["dob"] = request.POST["dob"]
+        data["securityQuestion"] = request.POST["securityQuestion"]
+        data["securityAnswer"] = request.POST["securityAnswer"]
+        data["address1"] = request.POST["address1"]
+        data["address2"] = request.POST["address2"]
+        data["city"] = request.POST["city"]
+        data["state"] = request.POST["state"]
+        data["country"] = request.POST["country"]
+        data["pincode"] = request.POST["pincode"]
+        db_forms["mahadiscom"].insert_one(data)
+
+    return render(request, 'home/mahadiscomreg.html')
+
+
+@login_required(login_url="/login/")
+def fir(request):
+    if request.method == "POST":
+        data = {}
+        data["dist"] = request.POST["dist"]
+        data["ps"]  =  request.POST["ps"]
+        data["year"] = request.POST["year"]
+        data["firNo"] = request.POST["firNo"]
+        data["firDate"] = request.POST["firDate"]
+        data["act1"] = request.POST["act1"]
+        data["act2"] = request.POST["act2"]
+        data["act3"] = request.POST["act3"]
+        data["act4"] = request.POST["act4"]
+        data["sections1"] = request.POST["sections1"]
+        data["sections2"] = request.POST["sections2"]
+        data["sections3"] = request.POST["sections3"]
+        data["address"] = request.POST["address"]
+        data["day"] = request.POST["day"]
+        data["dateFrom"] = request.POST["dateFrom"]
+        data["dateTo"] = request.POST["dateTo"]
+        data["timePeriod"] = request.POST["timePeriod"]
+        data["timeFrom"] = request.POST["timeFrom"]
+        data["timeTo"] = request.POST["timeTo"]
+        data["recvDate"] = request.POST["recvDate"]
+        data["recvTime"] = request.POST['recvTime']
+        data["refNo"] = request.POST['refNo']
+        data["refTime"] = request.POST["refTime"]
+        data["infoType"] = request.POST["infoType"]
+        data["writtenOral"] = request.POST["writtenOral"]
+        data["direction"] = request.POST["direction"]
+        data["beatNo"] = request.POST["beatNo"]
+        db_forms["fir"].insert_one(data)
+    return render(request, 'home/firform.html')

@@ -19027,9 +19027,9 @@ article .h1, article .h2, article .h3, article .h4, article .h5, article .h6 {
   transition: width .2s ease-in-out; }
   @media (max-width: 575.98px) {
     .search-bar .form-control {
-      width: 120px; }
+      width: 100px; }
       .search-bar .form-control:focus {
-        width: 150px; } }
+        width: 130px; } }
 
 .form-check-input.round-check[type="checkbox"] {
   border-radius: 50%; }

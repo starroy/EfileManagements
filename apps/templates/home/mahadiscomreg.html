@@ -1,0 +1,326 @@
+{%extends 'layouts/base.html'%} {%block content%}
+<div class="card shadow-lg">
+  <div class="card-header">
+    <h2>Registration</h2>
+  </div>
+  <div class="card-body">
+    <form
+      action="{%url 'mahadiscomreg'%}"
+      method="POST"
+      class="form-control border-0 border-opacity-0"
+      id="mahadiscom"
+    >
+    {%csrf_token%}
+      <div
+        class="d-flex flex-row justify-content-between px-2 rounded py-3"
+        style="background-color: royalblue; color: white; font-size: medium"
+      >
+        <div>Fill in the following Form for Registration</div>
+        <div>*indicates a required field</div>
+      </div>
+      <div class="border-bottom border-top border-black border-3 my-3">
+        <p class="mx-2" style="font-weight: bold; margin-top: 15px">
+          Consumer Profile
+        </p>
+      </div>
+      <div class="d-flex flex-row justify-content-between col-10 mx-2">
+        <label for="consumerType" class="form-label col-6"
+          >Consumer Type*</label
+        >
+        <!-- <input type="text" class="form-control" id="consumerType"> -->
+        <select
+          class="form-select"
+          aria-label="Default select example"
+          name="consumerType"
+          id="consumerType"
+        >
+          <option selected>----Select----</option>
+          <option value="1">One</option>
+          <option value="2">Two</option>
+          <option value="3">Three</option>
+        </select>
+      </div>
+      <div class="d-flex flex-row justify-content-between col-10 mt-3 mx-2">
+        <label for="consumerNo" class="form-label col-6"
+          >Consumer Number*</label
+        >
+        <input
+          type="text"
+          class="form-control"
+          id="consumerNo"
+          name="consumerNo"
+        />
+      </div>
+      <p> <span id="interim1"></span></p>
+
+      <div class="d-flex flex-row justify-content-between col-10 mt-3 mx-2">
+        <label for="bu" class="form-label col-6">BU*</label>
+        <!-- <input type="text" class="form-control" id="consumerType"> -->
+        <select class="form-select" aria-label="bu select" name="bu" id="bu">
+          <option selected>----Select----</option>
+          <option value="1">One</option>
+          <option value="2">Two</option>
+          <option value="3">Three</option>
+        </select>
+      </div>
+      <div class="d-flex flex-row justify-content-between col-md-10 mt-3 mx-2">
+        <label for="" class="form-label">Select Type*</label>
+        <div class="d-flex flex-row gap-4 col-md-6">
+          <div class="form-check">
+            <input
+              class="form-check-input"
+              type="radio"
+              name="actType"
+              id="actType1"
+              checked
+            />
+            <label class="form-check-label" for="actType1"> Individual </label>
+          </div>
+          <div class="form-check">
+            <input
+              class="form-check-input"
+              type="radio"
+              name="actType"
+              id="actType2"
+            />
+            <label class="form-check-label" for="actType2">
+              Company/Organization
+            </label>
+          </div>
+        </div>
+      </div>
+      <div class="d-flex flex-row justify-content-between col-10 mt-3 mx-2">
+        <label for="firstName" class="form-label col-6">First Name*</label>
+        <input
+          type="text"
+          class="form-control"
+          id="firstName"
+          name="firstName"
+        />
+      </div>
+         <p class="text-center"> <span id="interim2"></span></p>
+      <div class="d-flex flex-row justify-content-between col-10 mt-3 mx-2">
+        <label for="middleName" class="form-label col-6">Middle Name*</label>
+        <input
+          type="text"
+          class="form-control"
+          id="middleName"
+          name="middleName"
+        />
+      </div>
+      <p class="text-center"> <span id="interim3"></span></p>
+      <div class="d-flex flex-row justify-content-between col-10 mt-3 mx-2">
+        <label for="lastName" class="form-label col-6">Last Name*</label>
+        <input type="text" class="form-control" id="lastName" name="lastName" />
+      </div>
+      <p class="text-center"> <span id="interim4"></span></p>
+      <div class="d-flex flex-row justify-content-between col-10 mt-3 mx-2">
+        <label for="uid" class="form-label col-6">UID*</label>
+        <input type="text" class="form-control" id="uid" name="uid" />
+      </div>
+      <div class="d-flex flex-row justify-content-between col-10 mx-2 mt-3">
+        <label for="gender" class="form-label col-6">Gender*</label>
+        <!-- <input type="text" class="form-control" id="consumerType"> -->
+        <select class="form-select" name="gender" id="gender">
+          <option selected>----Select----</option>
+          <option value="1">One</option>
+          <option value="2">Two</option>
+          <option value="3">Three</option>
+        </select>
+      </div>
+
+      <div class="d-flex flex-row justify-content-between col-10 mx-2 mt-3">
+        <label for="maritalStatus" class="form-label col-6"
+          >Marital Status*</label
+        >
+        <!-- <input type="text" class="form-control" id="consumerType"> -->
+        <select class="form-select" name="maritalStatus" id="maritalStatus">
+          <option selected>----Select----</option>
+          <option value="1">One</option>
+          <option value="2">Two</option>
+          <option value="3">Three</option>
+        </select>
+      </div>
+
+      <div class="d-flex flex-row justify-content-between col-10 mt-3 mx-2">
+        <label for="dob" class="form-label col-6">Date of Birth*</label>
+        <input type="datetime-local" class="form-control" id="dob" name="dob" />
+      </div>
+
+      <div class="border-bottom border-top border-black mt-3 border-3">
+        <p class="mx-2" style="font-weight: bold; margin-top: 15px">
+          Security Question & Answer
+        </p>
+      </div>
+
+      <div class="d-flex flex-row justify-content-between col-10 mx-2 mt-3">
+        <label for="securityQuestion" class="form-label col-6"
+          >Security Question*</label
+        >
+        <!-- <input type="text" class="form-control" id="consumerType"> -->
+        <select
+          class="form-select"
+          name="securityQuestion"
+          id="securityQuestion"
+        >
+          <option selected>----Select----</option>
+          <option value="1">One</option>
+          <option value="2">Two</option>
+          <option value="3">Three</option>
+        </select>
+      </div>
+
+      <div class="d-flex flex-row justify-content-between col-10 mt-3 mx-2">
+        <label for="securityAnswer" class="form-label col-6"
+          >Security Answer*</label
+        >
+        <input
+          type="text"
+          class="form-control"
+          id="securityAnswer"
+          name="securityAnswer"
+        />
+      </div>
+
+      <div class="border-bottom border-top border-black mt-3 border-3">
+        <p class="mx-2" style="font-weight: bold; margin-top: 15px">
+          Consumer Demographic Information
+        </p>
+      </div>
+
+      <div class="d-flex flex-row justify-content-between col-10 mt-3 mx-2">
+        <label for="address1" class="form-label col-6">Address 1*</label>
+        <input type="text" class="form-control" id="address1" name="address1" />
+      </div>
+
+      <div class="d-flex flex-row justify-content-between col-10 mt-3 mx-2">
+        <label for="address2" class="form-label col-6">Address 2*</label>
+        <input type="text" class="form-control" id="address2" name="address2" />
+      </div>
+
+      <div class="d-flex flex-row justify-content-between col-10 mt-3 mx-2">
+        <label for="city" class="form-label col-6">Village/ Town/ City*</label>
+        <input type="text" class="form-control" id="city" name="city" />
+      </div>
+      <div class="d-flex flex-row justify-content-between col-10 mx-2 mt-3">
+        <label for="state" class="form-label col-6">State*</label>
+        <!-- <input type="text" class="form-control" id="consumerType"> -->
+        <select class="form-select" name="state" id="state">
+          <option selected>----Select----</option>
+          <option value="1">One</option>
+          <option value="2">Two</option>
+          <option value="3">Three</option>
+        </select>
+      </div>
+
+      <div class="d-flex flex-row justify-content-between col-10 mx-2 mt-3">
+        <label for="country" class="form-label col-6">Country*</label>
+        <!-- <input type="text" class="form-control" id="consumerType"> -->
+        <select class="form-select" name="country" id="country">
+          <option selected>----Select----</option>
+          <option value="1">One</option>
+          <option value="2">Two</option>
+          <option value="3">Three</option>
+        </select>
+      </div>
+      <div class="d-flex flex-row justify-content-between col-10 mt-3 mx-2">
+        <label for="pincode" class="form-label col-6">Pin Code*</label>
+        <input type="text" class="form-control" id="pincode" name="pincode" />
+      </div>
+      <div class="d-flex flex-row justify-content-start gap-4 col-10 mt-5 mx-2">
+        <button type="submit" class="btn btn-primary">Submit</button>
+        <a href="{%url 'mahadiscomreg'%}" type="button" class="btn btn-primary"
+          >Reset</a
+        >
+      </div>
+    </form>
+  </div>
+</div>
+<script>
+  if ("webkitSpeechRecognition" in window) {
+    // Initialize webkitSpeechRecognition
+    let speechRecognition = new webkitSpeechRecognition();
+    var recog = false;
+    var opId = "";
+    var intId = "";
+    // String for the Final Transcript
+    let final_transcript = "";
+
+    // Set the properties for the Speech Recognition object
+    speechRecognition.continuous = true;
+    speechRecognition.interimResults = true;
+    speechRecognition.maxAlternatives = 0;
+    // speechRecognition.lang = document.querySelector("#select_dialect").value;
+    speechRecognition.lang = "en";
+    // Callback Function for the onStart Event
+    speechRecognition.onstart = () => {
+      // Show the Status Element
+      document.querySelector("#status").style.display = "block";
+    };
+    speechRecognition.onerror = () => {
+      // Hide the Status Element
+      document.querySelector("#status").style.display = "none";
+    };
+    speechRecognition.onend = () => {
+      // Hide the Status Element
+      document.querySelector("#status").style.display = "none";
+    };
+
+    speechRecognition.onresult = (event) => {
+      // Create the interim transcript string locally because we don't want it to persist like final transcript
+      let interim_transcript = "";
+
+      // Loop through the results from the speech recognition object.
+      for (let i = event.resultIndex; i < event.results.length; ++i) {
+        // If the result item is Final, add it to Final Transcript, Else add it to Interim transcript
+        if (event.results[i].isFinal) {
+          final_transcript += event.results[i][0].transcript;
+        } else {
+          console.log("interim");
+          interim_transcript += event.results[i][0].transcript;
+        }
+      }
+
+      // Set the Final transcript and Interim transcript.
+      document.querySelector(opId).value = final_transcript;
+      // document.querySelector(opId).value = final_transcript;
+      document.querySelector(intId).innerHTML = interim_transcript;
+      console.log(interim_transcript);
+    };
+    idArr = [
+      "#consumerNo",
+      "#firstName",
+      "#middleName",
+      "#lastName",
+      "#securityAnswer",
+      "#address1",
+      "#address2",
+      "#city",
+      "#pincode"
+    ];
+    for (let j = 0; j < idArr.length; j++) {
+      // Set the onClick property of the start button
+      document.querySelector(idArr[j]).onclick = () => {
+        // Start the Speech Recognition
+        speechRecognition.lang = "en";
+
+        if (!recog) {
+          opId = idArr[j];
+          intId = "#interim" + (j + 1);
+          final_transcript = "";
+          speechRecognition.start();
+          recog = true;
+        } else {
+          opId = idArr[j];
+          speechRecognition.stop();
+          recog = false;
+        }
+      };
+    }
+  } else {
+    console.log("Speech Recognition Not Available");
+  }
+  // Set the onClick property of the stop button
+</script>
+
+{%endblock%}
