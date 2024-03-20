@@ -1,0 +1,89 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} UI Notifications {% endblock %} 
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+<h2 class="mt-4 pt-4 px-5">Add User</h2>
+<div class="mt-5 mb-3 px-5">
+    <form method="post" class = "col-md-12 row">
+        {% csrf_token %}
+        <div class="col-md-3 gap-3 py-2 px-3 ">
+          <label class="form-label" for="name">User Name</label>
+          <input
+            class="form-control px-3"
+            id="name"
+            type="text"
+            name="name"
+            value = ""
+          />
+        </div>
+        <div class="col-md-3 gap-3 py-2 px-3 ">
+          <label class="form-label" for="name">Role</label>
+          <div class="col-md-12">
+            <select name="status" id="lang" class="form-control">
+                <option value="assigned" selected>Admin</option>
+                <option value="approved">user</option>
+            </select>
+          </div>
+        </div>
+        <div class="col-md-3 py-4">
+            <button type="submit" class="btn btn-primary  mt-3 py-2 align-items-center">
+                <svg fill="primary" height="1.5em" width="1.5em" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" 
+                    viewBox="0 0 300.003 300.003" xml:space="preserve">
+                <g>
+                    <g>
+                        <path fill= "#ffffff" d="M150,0C67.159,0,0.001,67.159,0.001,150c0,82.838,67.157,150.003,149.997,150.003S300.002,232.838,300.002,150
+                            C300.002,67.159,232.839,0,150,0z M213.281,166.501h-48.27v50.469c-0.003,8.463-6.863,15.323-15.328,15.323
+                            c-8.468,0-15.328-6.86-15.328-15.328v-50.464H87.37c-8.466-0.003-15.323-6.863-15.328-15.328c0-8.463,6.863-15.326,15.328-15.328
+                            l46.984,0.003V91.057c0-8.466,6.863-15.328,15.326-15.328c8.468,0,15.331,6.863,15.328,15.328l0.003,44.787l48.265,0.005
+                            c8.466-0.005,15.331,6.86,15.328,15.328C228.607,159.643,221.742,166.501,213.281,166.501z"/>
+                    </g>
+                </g>
+                </svg>
+                &nbsp;&nbsp;Add
+            </button>
+        </div>
+    </form>
+    <h2 class="mt-4 pt-4">User List</h2>
+    <table class="table table-striped table-bordered col-md-8 mt-5">
+      <thead>
+          <tr>
+              <th>User Name</th>
+              <th>Role</th>
+              <th>Entered Date</th>
+          </tr>
+      </thead>
+      <tbody>
+          {% comment %} {% for item in kmsdata %} {% endcomment %}
+            {% for employee in employees %}
+            <tr>
+                    <tr>
+                        <td>{{ employee.name }}</td>
+                        <td>{{ employee.role }}</td>
+                        <td>{{ employee.date_added }}</td>
+                    </tr>
+                {% comment %} <td>root</td>
+                <td>admin</td>
+                <td>03/20/2024</td> {% endcomment %}
+            </tr>
+            {% endfor %}
+          {% comment %} {% endfor %} {% endcomment %}
+      </tbody>
+  </table>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script>
+    // Define the kmsdata variable with the provided data
+    let kmsdata = [{file_id: 0, name: 'FGA11', file_status: "Work in Progress", updatingDate: "03/20/2024", transition: "root" }];
+
+    // You can now use the kmsdata variable in this script block for further processing or manipulation
+</script>
+    
+{% endblock %}

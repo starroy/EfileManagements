@@ -1,0 +1,83 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} UI Notifications {% endblock %} 
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+<h2 class="mt-4 pt-4">Transcript</h2>
+<div class="mt-5 mb-3 px-5">
+    <div class = "col-md-12 row">
+        <div class ="col-md-4">
+            <label class="form-label" for="name">Calendar</label>
+            <input
+                class="form-control"
+                id="adharNo"
+                type="date"
+                name="adharNo"
+            />
+        </div>
+        <form class="search form-group col-md-4" id="search-main"  method="post" enctype="multipart/form-data">
+          {%csrf_token%}
+          <label for="searchBar">Search User</label>
+          <div class="input-group input-group-merge search-bar">
+            <span class="input-group-text" id="topbar-addon">
+              <svg class="icon icon-xs" x-description="Heroicon name: solid/search" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"></path>
+              </svg>
+            </span>
+              <input type="text" class="form-control col-md-2" id="searchBar" placeholder="Search" aria-label="Search" aria-describedby="topbar-addon" name="searchDoc">
+          </div>
+        </form>
+        <form class="search form-group col-md-4" id="search-main"  method="post" enctype="multipart/form-data">
+          {%csrf_token%}
+          <label for="searchBar">Searh File ID</label>
+          <div class="input-group input-group-merge search-bar">
+            <span class="input-group-text" id="topbar-addon">
+              <svg class="icon icon-xs" x-description="Heroicon name: solid/search" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"></path>
+              </svg>
+            </span>
+              <input type="text" class="form-control col-md-2" id="searchBar" placeholder="Search" aria-label="Search" aria-describedby="topbar-addon" name="searchDoc">
+          </div>
+        </form>
+    </div>
+    <table class="table table-striped table-bordered col-md-12 mt-5">
+      <thead>
+          <tr>
+              <th>File ID</th>
+              <th>Name</th>
+              <th>File Status</th>
+              <th>Date</th>
+              <th>Transition</th>
+          </tr>
+      </thead>
+      <tbody>
+          {% comment %} {% for item in kmsdata %} {% endcomment %}
+          <tr>
+              {% comment %} <td>{{ item.file_id }}</td>
+              <td>{{ item.name }}</td>
+              <td>{{ item.file_status }}</td>
+              <td>{{ item.updatingDate }}</td>
+              <td>{{ item.transition }}</td> {% endcomment %}
+              <td>1</td>
+              <td>New Doc</td>
+              <td>Woking on Progress</td>
+              <td>03/20/2024</td>
+              <td>root</td>
+          </tr>
+          {% comment %} {% endfor %} {% endcomment %}
+      </tbody>
+  </table>
+</div>
+
+<script>
+    // Define the kmsdata variable with the provided data
+    let kmsdata = [{file_id: 0, name: 'FGA11', file_status: "Work in Progress", updatingDate: "03/20/2024", transition: "root" }];
+
+    // You can now use the kmsdata variable in this script block for further processing or manipulation
+</script>
+    
+{% endblock %}

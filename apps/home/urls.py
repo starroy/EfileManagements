@@ -17,7 +17,7 @@ urlpatterns = [
     path("searchDatabase", views.search_database, name="searchDatabase"),
     path("deleterecord", views.delete_record, name="deleterecord"),
     path('autocomplete', views.AdharAutocomplete, name="adhar-autocomplete"),
-
+    # path('kmsDataView', views.kmsDataView, name="kmsDataView"),
 
     path("selectText", views.select_text, name="selectText"),
     path("selectTextCropper", views.select_cropper, name="selectTextCropper"),
@@ -25,6 +25,10 @@ urlpatterns = [
     path("imageUpload", views.image_upload, name="imageUpload"),
     path("speechToText", views.speech_to_text, name="speechToText"),
     path("speechToTextNew", views.speech_to_text_new, name="speechToTextNew"),
+    path("kms", views.KMS, name="kms"),
+    path("myQueue", views.MyQueue, name="myQueue"),
+    path("management", views.UserManagement, name="management"),
+    path("dashboard", views.Dashboard, name="dashboard"),
     path("mahadiscomreg", views.mahadiscomreg, name="mahadiscomreg"),
     path("firform", views.fir, name="firform"),
     # Matches any html file

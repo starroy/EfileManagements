@@ -23,26 +23,55 @@ from django.core.files import File
 from io import BytesIO
 from django.views import View
 # from googletrans import Translator
-from datetime import datetime
+from datetime import date
 from django.shortcuts import render
 
-def show_date(request):
-    today_date = datetime.now().date()
-    return render(request, 'index.html', {'today_date': today_date})
+def my_view(request):
+    kmsdata = [{file_id: 0, name: 'FGA11', file_status: "Work in Progress", updatingDate: "03/20/2024", transition: "root" }]
 
+    context = {
+        'kmsdata': kmsdata
+    }
 
+    return render(request, 'kms.html', context)
 
 
 from .detect import get_data
 from .mongo_update import insert_record
 
-client = pymongo.MongoClient("mongodb://mongodb_new_ocr:27017/")
-# client = pymongo.MongoClient("mongodb://localhost:27017/")
+# client = pymongo.MongoClient("mongodb://mongodb_new_ocr:27017/")
+client = pymongo.MongoClient("mongodb://localhost:27017/")
+print("mongodcliet",client)
 db = client["userdata"]
 db_forms = client["forms"]
 
 
+from .models import Employee
+
+def add_employee(request):
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        role = request.POST.get('role')
+        Employee.objects.create(name=name, role=role)
+    
+    employees = Employee.objects.all()
+    return render(request, 'userManagement.html', {'employees': employees})
 # ------- Admin --------------------
+@login_required(login_url="/login/")
+def get_todays_date(request):
+    today = date.today()
+    return render(request, 'index.html', {'today': today})
+
+# @login_required(login_url="/login/")
+# def kmsDataView(request):
+#     kmsdata = [{'file_id': 0, 'name': 'FGA11', 'file_status': "Work in Progress", 'updatingDate': "03/20/2024", 'transition': "root" }]
+
+#     context = {
+#         'kmsdata': kmsdata
+#     }
+
+#     return render(request, 'kms.html', context)
+
 @login_required(login_url="/login/")
 def index(request):
     context = {"segment": "index"}
@@ -460,6 +489,21 @@ def select_ocr(request):
         return render(request, "home/select-ocr-done.html", {"imageBytes": img64, "result": r_string})
 
 
+@login_required(login_url="/login/")
+def KMS(request):
+    return render(request, "home/kms.html")
+
+@login_required(login_url="/login/")
+def MyQueue(request):
+    return render(request, "home/myQueue.html")
+
+@login_required(login_url="/login/")
+def UserManagement(request):
+    return render(request, "home/userManagement.html")
+
+@login_required(login_url="/login/")
+def Dashboard(request):
+    return render(request, "home/dashboard.html")
 
 # ------------------ Speech to Text -----------------------
 @login_required(login_url="/login/")
