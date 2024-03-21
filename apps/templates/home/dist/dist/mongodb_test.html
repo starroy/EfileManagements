@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MongoDB Test</title>
+    
+</head>
+<body>
+    <h1>MongoDB Test</h1>
+    
+    <form id="mongoForm" method = "POST", action="{% url 'save_to_mongo'%}">
+        {% comment %} {% csrf_token %} {% endcomment %}
+        {% csrf_token %}
+        <div class="form-group">
+        <label for="inputText">Enter Text:</label>
+        <input type="text" id="inputText"
+        class="form-control"
+        name="content">
+        <button type="submit">Save to MongoDB</button>
+        <label id="saveLabel"></label>
+        </div>
+    </form>
+
+    <br>
+
+    <form id="findForm" action="{%url 'save_to_mongo'%}">
+        {% comment %} {% csrf_token %} {% endcomment %}
+        <label for="findText">Find Text:</label>
+        <input type="text" id="findText">
+        <button type="submit">Find in MongoDB</button>
+        <label id="findLabel"></label>
+    </form>
+</body>
+</html>

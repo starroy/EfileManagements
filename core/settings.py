@@ -6,6 +6,7 @@ Copyright (c) 2019 - present AppSeed.us
 import os
 # from decouple import config
 from unipath import Path
+import pymongo
 
 
 # DEBUG = config('DEBUG', default=False, cast=bool)
@@ -92,6 +93,20 @@ WSGI_APPLICATION = 'core.wsgi.application'
 #         'PORT': '3306',
 #     }
 # }
+# MONGODB_DATABASES = {
+#     'default': {
+#         # 'ENGINE': 'djongo',
+#         'NAME': 'userdata',
+#         'HOST': 'localhost',
+#         'PORT': 27017,
+#         'USERNAME': 'your_username',
+#         'PASSWORD': 'your_password',
+#     }
+# }
+
+# client = pymongo.MongoClient(f"mongodb://{MONGODB_DATABASES['default']['HOST']}:{MONGODB_DATABASES['default']['PORT']}/")
+# db = client[MONGODB_DATABASES['default']['NAME']]
+
 DATABASES = {
      'default': {
          'ENGINE': 'django.db.backends.sqlite3',

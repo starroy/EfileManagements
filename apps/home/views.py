@@ -39,23 +39,55 @@ def my_view(request):
 from .detect import get_data
 from .mongo_update import insert_record
 
+
 # client = pymongo.MongoClient("mongodb://mongodb_new_ocr:27017/")
-client = pymongo.MongoClient("mongodb://localhost:27017/")
-print("mongodcliet",client)
-db = client["userdata"]
-db_forms = client["forms"]
+# client = pymongo.MongoClient("mongodb://localhost:27017/")
+# # print("mongodcliet",client)
+# db = client["userdata"]
+# db_forms = client["forms"]
 
 
-from .models import Employee
+# from django.shortcuts import render
+# from django.http import JsonResponse
+from pymongo import MongoClient
+from .models import MongoData
 
-def add_employee(request):
+client = MongoClient('mongodb://localhost:27017')
+db = client['mydatabase']
+collection = db['mycollection']
+
+def mongodb_test(request):
+    return render(request, 'home/mongodb_test.html')
+
+# @login_required(login_url="/login/")
+def save_to_mongo(request):
     if request.method == 'POST':
-        name = request.POST.get('name')
-        role = request.POST.get('role')
-        Employee.objects.create(name=name, role=role)
-    
-    employees = Employee.objects.all()
-    return render(request, 'userManagement.html', {'employees': employees})
+        text=request.POST.get('text')
+        print(text)
+        
+        
+        mongo_data = MongoData.objects.create(text=text)
+        # result = collection.insert_one({'text': text})
+        if mongo_data:
+            return JsonResponse("Success")
+        else:
+            return JsonResponse("Failed")
+    return JsonResponse({"message": "Method Not Allowed"}, status=405)
+
+# @login_required(login_url="/login/")
+def find_in_mongo(request):
+    if request.method == 'POST':
+        text = request.POST.get('content')
+        print('content', text)
+        result = collection.find_one({'text': text})
+        if result:
+            return HttpResponse('success')
+        else:
+            return HttpResponse('Failed')
+
+db = client["userData"]
+collection = db['userCollection']
+
 # ------- Admin --------------------
 @login_required(login_url="/login/")
 def get_todays_date(request):

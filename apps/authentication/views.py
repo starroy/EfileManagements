@@ -12,6 +12,7 @@ from django.contrib.auth.models import User
 from .forms import RegisterForm
 from django.http import JsonResponse
 
+
 def login_view(request):
     form = LoginForm(request.POST or None)
 

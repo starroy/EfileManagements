@@ -5,9 +5,15 @@ Copyright (c) 2019 - present AppSeed.us
 
 from apps.home import views
 from django.urls import path, re_path
+# from .views import save_and_check_data
+from .views import mongodb_test, save_to_mongo, find_in_mongo
 
 urlpatterns = [
     # The home page
+    # path('save_and_check_data/', save_and_check_data, name='save_and_check_data'),
+    path('mongodb_test', views.mongodb_test, name='mongodb_test'),
+    path('save_to_mongo', views.save_to_mongo, name='save_to_mongo'),
+    path('find_in_mongo', views.find_in_mongo, name='find_in_mongo'),
     path("", views.index, name="home"),
     path("imagetoText", views.imagetoText, name="imagetoText"),
     path("imagetoTextPan", views.imagetoTextPan, name="imagetoTextPan"),

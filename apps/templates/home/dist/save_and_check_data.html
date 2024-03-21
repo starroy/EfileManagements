@@ -1,0 +1,22 @@
+<!-- templates/myapp/your_template.html -->
+<input type="text" id="inputText">
+<button id="submitButton">Submit</button>
+<label id="resultLabel"></label>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#submitButton').click(function() {
+            var inputText = $('#inputText').val();
+
+            $.ajax({
+                type: 'POST',
+                url: '/save_and_check_data/',
+                data: {'input_text': inputText},
+                success: function(response) {
+                    $('#resultLabel').text(response.message);
+                }
+            });
+        });
+    });
+</script>
