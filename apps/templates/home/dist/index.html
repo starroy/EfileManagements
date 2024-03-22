@@ -21,8 +21,7 @@
             </button>
             <div class="col-1"></div>
           </div>
-          <form class="search form-group" id="search-main"  method="post" enctype="multipart/form-data">
-            {%csrf_token%}
+          {% comment %} <form class="search form-group" id="search-main" >
             <label for="searchBar">Search User</label>
             <div class="input-group input-group-merge search-bar">
               <span class="input-group-text" id="topbar-addon">
@@ -32,7 +31,7 @@
               </span>
                 <input type="text" class="form-control col-md-2" id="searchBar" placeholder="Search" aria-label="Search" aria-describedby="topbar-addon" name="searchDoc">
             </div>
-          </form>
+          </form> {% endcomment %}
         </div>
       </div>
       <div>
@@ -43,58 +42,51 @@
       <div class = "col-md-8">
         <div class = "row">
           <div class="col-md-6 mt-2">
-            <form
-              method="post"
-              id="imagetotextForm"
-              enctype="multipart/form-data"
-            >
-              {% csrf_token %}
+            <div>
             <!-- <div class="col-md-12"> -->
               <div class="form-group">
                 <label for="image">Upload File</label>
                 <input
                   type="file"
                   class="form-control"
-                  {% comment %} name="image"
-                  id="image"
-                  placeholder="Image"
-                  accept="*" {% endcomment %}
+                  id = "fileInput"
+                  accept=".docx, .pdf, .jpg, .jpeg, .png"
+                  onchange="extractMetadatas()"
                 />
               </div>
-            </form>
+            </div>
           </div>
           <div class="col-lg-6 mt-2">
-            <form
-              method="post"
-              id="imagetotextFormPan"
-              enctype="multipart/form-data"
-            >
-              {% csrf_token %}
+            <div>
               <div class="form-group">
                 <label for="imagepan">Use Template</label>
               </div>
               <!-- Django template with Bootstrap for responsive button titles -->
               <div class="flex-row custom-full-width">
-                <button type="submit" class="btn btn-primary btn-submit mb-4 col-4" id="togglePan">
+                <button type="submit" class="btn btn-primary btn-submit mb-4 col-4" id="togglePan" onclick="generate_id()">
                     <div class="d-flex justify-content-center align-items-center flex-column">
                         <span class="d-none d-lg-block">Customer Form</span>
                         <span class="d-block d-lg-none">Customer Form</span>
                     </div>
                 </button>
-                <button type="submit" class="btn btn-primary btn-submit mb-4 ml-4 col-4" id="toggleFIR">
-                    <div class="d-flex justify-content-center align-items-center flex-column">
-                        <span class="d-none d-lg-block">FIR Form</span>
-                        <span class="d-block d-lg-none">FIR Form</span>
-                    </div>
-                </button>
-                <button type="submit" class="btn btn-primary btn-submit mb-4 ml-4 col-4" id="toggleMSDA">
-                    <div class="d-flex justify-content-center align-items-center flex-column">
-                        <span class="d-none d-lg-block">MSDA Form</span>
-                        <span class="d-block d-lg-none">MSDA Form</span>
-                    </div>
-                </button>
+                <a href="{% url 'firform'%}" target="_blank" >
+                  <button type="submit" class="btn btn-primary btn-submit mb-4 ml-4 col-4" id="toggleFIR" onclick="gotoFir()">
+                      <div class="d-flex justify-content-center align-items-center flex-column">
+                          <span class="d-none d-lg-block">FIR Form</span>
+                          <span class="d-block d-lg-none">FIR Form</span>
+                      </div>
+                  </button>
+                </a>
+                <a href="{% url 'mahadiscomreg'%}" target="_blank" >
+                  <button type="submit" class="btn btn-primary btn-submit mb-4 ml-4 col-4" id="toggleMSDA" onclick="gotoFir()">
+                      <div class="d-flex justify-content-center align-items-center flex-column">
+                          <span class="d-none d-lg-block">MSDA Form</span>
+                          <span class="d-block d-lg-none">MSDA Form</span>
+                      </div>
+                  </button>
+                </a>
               </div>
-            </form>
+            </div>
           </div>
         </div>
         <div id = "toggleDiv" style = "display: none;">
@@ -104,46 +96,52 @@
           </h2>
           <div class="row col-md-12 mt-4 mb-5 d-flex">
             <div class="card col-md-12">
-              <form class="col-md-12" id="userData" action="" method="POST" enctype="multipart/form-data">
-                {% csrf_token %}
-                <div class ='row justify-content-between aling-items-center col-md-12 mt-4 px-3'>
-                  <div class="col-md-6 gap-3 py-2 px-3 ">
-                    <label class="form-label" for="name">Edit</label>
-                    <input
-                      class="form-control px-3"
-                      id="name"
-                      type="text"
-                      name="name"
-                      value = ""
-                    />
-                  </div>
-                  <div class="col-md-6 gap-3 py-2 px-3">
+              <div class="col-md-12" id="userData">
+                <div class="col-md-12 text-center mt-3">
+                  <label class="form-label  fs-2" for="name">Edit</label>
+                </div>
+                <div class ='row justify-content-between aling-items-center col-md-12 px-3'>
+                  <div class="col-md-4 gap-3 py-2 px-3">
                     <label class="form-label text-nowrap" for="dob">Attach</label>
                     <input
                       type="file"
                       class="form-control px-3"
                       name="image"
-                      id="image"
+                      id="attach"
                       placeholder="Image"
-                      accept="*"
+                      accept=".docx, .pdf, .jpg, .jpeg, .png"
                     />
                   </div>
-                </div>
-                <div class ='row justify-content-between aling-items-center col-md-12 mt-4 px-3'>
-                  <div class="col-md-6 gap-3 py-2 px-3">
+                  <div class="col-md-4 gap-3 py-2 px-3">
                     <label class="form-label text-nowrap" for="gender">Linked File</label>
                     <input
                       class="form-control"
-                      id="linked"
+                      id="urlInput"
                       type="text"
                       name="linked"
+                      {% comment %} readonly  {% endcomment %}
+                      onblclick="showModal()" 
+                      placeholder="Double-click to input URL"
                     />
+                    <div class="modal" id="urlModal" tabindex="-1" role="dialog">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-body">
+                                    <input type="text" id="modalUrlInput" class="form-control" placeholder="Enter URL">
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" onclick="cancelModal()">Cancel</button>
+                                    <button type="button" class="btn btn-primary" onclick="confirmModal()">OK</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                   </div>
-                  <div class="col-md-6 gap-3 py-2 px-3">
+                  <div class="col-md-4 gap-3 py-2 px-3">
                     <label class="form-label text-nowrap" for="fatherName">Approved</label>
                     <input
                       class="form-control"
-                      id="fatherName"
+                      id="approved"
                       type="text"
                       name="fatherName"
                     />
@@ -151,10 +149,10 @@
                 </div>
                 <div class ='row justify-content-between aling-items-center col-md-12 mt-4 px-3'>
                   <div class="col-md-6 gap-3 py-2 px-3">
-                    <label class="form-label text-nowrap" for="fatherName">Customer Name</label>
+                    <label class="form-label text-nowrap" for="customerName">Customer Name</label>
                     <input
                       class="form-control"
-                      id="fatherName"
+                      id="customerName"
                       type="text"
                       name="fatherName"
                     />
@@ -163,7 +161,7 @@
                     <label class="form-label text-nowrap" for="adharNo">Date of Birth</label>
                     <input
                       class="form-control"
-                      id="adharNo"
+                      id="birth"
                       type="date"
                       name="adharNo"
                     />
@@ -174,7 +172,7 @@
                     <label class="form-label text-nowrap" for="panNo">PAN Number</label>
                     <input
                       class="form-control"
-                      id="panNo"
+                      id="panNumber"
                       type="text"
                       name="panNo"
                     />
@@ -183,7 +181,7 @@
                     <label class="form-label text-nowrap" for="adharNo">Adhar Number</label>
                     <input
                       class="form-control"
-                      id="adharNo"
+                      id="adharNumber"
                       type="text"
                       name="adharNo"
                     />
@@ -191,56 +189,44 @@
                 </div>
                 <div class="col-md-12 gap-6 py-2 px-3">
                   <label class="form-label text-nowrap" for="gender">Short Description</label>
-                  <textarea   cols="50" rows="2" class="form-control" style="font-size: 18px;">{{result}}</textarea>
+                  <textarea   cols="50" rows="2" id="shortDescription" class="form-control" style="font-size: 18px;">{{result}}</textarea>
                 </div>
                 <div class="col-md-12 gap-6 py-2 px-3">
                   <label class="form-label text-nowrap" for="gender">Details</label>
-                  <textarea   cols="50" rows="10" class="form-control" style="font-size: 18px;">{{result}}</textarea>
+                  <textarea   cols="50" rows="10" id="detailsitem" class="form-control" style="font-size: 18px;">{{result}}</textarea>
                 </div>
-
-                <div class="d-dflex mx-3 gap-3">
-                <button
-                  type="submit"
-                  class="btn btn-primary btn-submit mt-4"
-                  style="margin-bottom: 9px"
-                  id="userDataSub"
-                >
-                  Submit
-                </button>
-                <a
-                  type="button"
-                  class="btn btn-primary btn-submit mt-4"
-                  style="margin-bottom: 10px"
-                  id="reset"
-                  href="{% url 'home'%}"
-                >
-                  Reset
-                </a>
-                <button
-                      type="button"
-                      class="btn btn-primary btn-submit mt-4"
-                      style="margin-bottom: 10px"
-                      id="editForm"
-                      onclick="formEdit()" hidden
-                    >
-                      Edit
-                </button>
-              </form>
-              {% if user.is_superuser %}
-              <form  class="col-md-12" method="POST" id="delform" action="{%url 'deleterecord' %}" enctype="multipart/form-data">
-                {% csrf_token %}
-                <input class="form-control px-3" type="text" id="recordid" value="" name="recid" hidden>      
-                <button
-                  type="submit"
-                  class="btn btn-danger btn-submit mt-4"
-                  style="margin-bottom: 9px"
-                  id="userDataDel"
-                  hidden
-                >
-                  Delete
-                </button>
-              </form>
-              {% endif %} 
+                <div class = 'd-flex flex-row col-md-12'>
+                  <div class="col-md-7 gap-6 py-2 px-3">
+                    <label class="form-label text-nowrap" for="gender">Comment</label>
+                    <textarea   cols="50" rows="2" id="comment" class="form-control" style="font-size: 18px;">{{result}}</textarea>
+                  </div>
+                  <div class="d-flex mx-3 gap-3 flex-row justify-center align-items-center">
+                    <div class="form-group col-md-7">
+                      {% comment %} s<button
+                        class="btn btn-primary btn-submit mt-4"
+                        style="margin-bottom: 9px"
+                        onclick="sendCustomData()"
+                      >
+                        Submit
+                      </button> {% endcomment %}
+                      <button id = "download"  class="btn btn-primary  mt-4  col-md-12 align-items-center" id="adhar"
+                      onclick="sendCustomData()"
+                      >
+                        Submit
+                      </button>
+                    </div>
+                    <div class="form-group col-md-7">
+                      <a 
+                        type="button" 
+                        class="btn btn-primary btn-submit mt-4 col-md-12"
+                        id="reset"
+                        href="{% url 'home'%}"
+                      >
+                        Save as Draft
+                      </a>
+                    </div>
+                  </div>
+                </div>
               </div>
               <!-- </textarea> -->
               <p id="userexists"></p>
@@ -282,57 +268,65 @@
             Status: 
             <div class="col-md-12">
               <select name="status" id="lang" class="form-control">
-                  <option value="assigned" selected>Assigned</option>
-                  <option value="approved">Approved</option>
-                  <option value="closed">Closed</option>
-                  <option value="work">Work in Progress</option>
+                  <option value="Created" selected>Created</option>
+                  <option value="Assigned">Assigned</option>
+                  <option value="Work in Progress">Work in Progress</option>
+                  <option value="For Approval">For Approval</option>
+                  <option value="Approved">Approved</option>
+                  <option value="Completed">Completed</option>
+                  <option value="work">Closed</option>
               </select>
             </div>
             <br>
             File Name: <input
               class="form-control"
-              id="adharNo"
+              id="fileName"
               type="text"
               name="adharNo"
             /><br>
-            File ID: FGE11<br>
+            File ID: <div id='fileId'>{{unique_id}}</div><br>
             Assigned To: 
             <div class="col-md-12">
-              <select name="status" id="lang" class="form-control">
-                <option value="en" selected>root</option>
+              <select name="status" id="assign" class="form-control">
+                <option value = 'root' selected>root</option>
               </select>
             </div>
             <br>
             Labels: <input
               class="form-control"
-              id="adharNo"
+              id="label"
               type="text"
               name="adharNo"
             /><br>
-            Created Date: <p>3/20/2024</p><br>
-            Created By: <p>root</p><br>
-            Modified By:<p>root</p><br>
-            Modified Date:<p>3/20/2024</p> <br>
-            Priority: <input
+            Created Date: <div id='createDate'></div><br>
+            Created By: <div id="createdBy"></div><br>
+            Modified By:<div id="modifiedBy"></div><br>
+            Modified Date:<div id="modifiedDate"></div> <br>
+            Priority: 
+            <div class="col-md-12">
+              <select name="status" id="priority" class="form-control">
+                <option value="High" selected>High</option>
+                <option value="Medium">Medium</option>
+                <option value="Low">Low</option>
+              </select>
+            </div><br>
+            System: 
+            <select name="status" id="system" class="form-control">
+              <option value="System A" selected>System A</option>
+              <option value="System B">System B</option>
+              <option value="System C">System C</option>
+              <option value="System D">System D</option>
+            </select><br>
+            Approved By:<div id="approvedBy">root</div> <br>
+            Approved Date: <div id="currentTime"></div><br>
+            Target Date: 
+            <input
               class="form-control"
-              id="adharNo"
-              type="text"
-              name="adharNo"
-            /><br>
-            System: <input
-              class="form-control"
-              id="adharNo"
-              type="text"
-              name="adharNo"
-            /><br>
-            Approved By:<p>root</p> <br>
-            Approved Date: <p id="current-time"></p><br>
-            Target Date: <input
-              class="form-control"
-              id="adharNo"
+              id="target_date"
               type="date"
               name="adharNo"
-            /><br>
+            />
+            <br>
         </div>
       </div>
     </div>
@@ -342,337 +336,352 @@
  <!--          integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="  -->
  <!--            crossorigin="anonymous"></script> -->
   <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
-
+<!-- url input-->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
     <script>
-      document.getElementById("togglePan").addEventListener("click", function() {
-          var textElement = document.getElementById("toggleDiv");
-          if (textElement.style.display === "none") {
-              textElement.style.display = "block";
-          } else {
-              textElement.style.display = "none";
+      function showModal() {
+          document.getElementById('urlModal').style.display = 'block';
+      }
+
+      function cancelModal() {
+          document.getElementById('urlModal').style.display = 'none';
+      }
+
+      function confirmModal() {
+          var modalUrlInput = document.getElementById('modalUrlInput');
+          var urlInput = document.getElementById('urlInput');
+          urlInput.value = modalUrlInput.value;
+          cancelModal();
+      }
+  </script>
+  <Script>
+    {% comment %} var unique_id = shortuuid.ShortUUID().random(length=8)
+    var paragraph = document.getElementById("uniqueid");
+
+// Update the text content of the <p> element
+    paragraph.textContent = unique_id; {% endcomment %}
+    
+    function sendCustomData() {
+      var text = document.getElementById('lang').value;
+      var fileId = document.getElementById('fileId').innerHTML;
+      var createDate = document.getElementById('createDate').innerHTML;
+      var modifiedDate = document.getElementById('modifiedDate').innerHTML;
+      var modifiedBy = document.getElementById('modifiedBy').innerHTML;
+      var approvedBy = document.getElementById('approvedBy').innerHTML;
+      var currentTime = document.getElementById('currentTime').innerHTML;
+      var priority = document.getElementById('priority').value;
+      var system = document.getElementById('system').value;
+      var fileName = document.getElementById('fileName').value;
+      var assign = document.getElementById('assign').value;
+      var label = document.getElementById('label').value;
+      var createBy = document.getElementById('createdBy').innerHTML;
+      var targetDate = document.getElementById('target_date').value;
+      var customData = {};
+      var attach = document.getElementById('attach').value;
+      var linkfile = document.getElementById('urlInput').value;
+      var approved = document.getElementById('approved').value;
+      var customerName = document.getElementById('customerName').value;
+      var birth = document.getElementById('birth').value;
+      var panNumber = document.getElementById('panNumber').value;
+      var adharNumber = document.getElementById('adharNumber').value;
+      var shortDescription = document.getElementById('shortDescription').value;
+      var detailsitem = document.getElementById('detailsitem').value;
+      var comment = document.getElementById('comment').value;
+      console.log(text, fileName, fileId, createDate, createdBy, modifiedDate, modifiedBy, approvedBy, currentTime,
+        fileName, assign, label, priority, system, targetDate
+      );
+      fetch('send_custom_data', {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json',
+              'X-CSRFToken': '{{ csrf_token }}'
+          },
+          body: JSON.stringify({ status: text, 
+            file_name: fileName, 
+            file_id: fileId,  
+            assigned: assign,
+            labeled: label,
+            create_date: createDate,
+            create_by: createBy,
+            modified_date: modifiedDate,
+            modified_by: modifiedBy,
+            priorityed: priority,
+            systemed: system,
+            approved_by:approvedBy,
+            current_time: currentTime,
+            target_date: targetDate,
+            editableData: {
+              attached : attach,
+              link_file: linkfile,
+              approve : approved,
+              customer_name : customerName,
+              birthday: birth,
+              panNo: panNumber,
+              adharNo: adharNumber,
+              shortDesp: shortDescription,
+              details_item: detailsitem,
+              comments: comment,
+            }
+          })
+      })
+      .then(response => response.text())
+      .then(data => {
+          console.log(success)
+          var unique_id = shortuuid.ShortUUID().random(length=8)
+          var paragraph = document.getElementById("uniqueid");
+      })
+      .catch(error => {
+          console.error('Error:', error);
+      });
+    }
+    let cnt =0;
+    function generate_id() {
+      cnt = cnt + 1;
+      let cntt= cnt % 2;
+      if (cntt == 0){
+        document.getElementById('createDate').innerText = '';
+        document.getElementById('createdBy').innerText = '';
+        document.getElementById('modifiedDate').innerText = '';
+        document.getElementById('modifiedBy').innerText = '';
+        document.getElementById("fileId").innerText = '';
+        
+      }
+      else {
+        $.ajax({
+            url: 'unique_id',
+            type: 'GET',
+            success: function(data) {
+              document.getElementById("fileId").innerText = data;
+                // Update the frontend content with the unique ID as needed
+            }
+        });
+        function getCurrentDate() {
+          var currentDate = new Date();
+          var year = currentDate.getFullYear();
+          var month = currentDate.getMonth() + 1; // Month is zero-based
+          var day = currentDate.getDate();
+          
+          var metadata = {
+              year: year,
+              month: month,
+              day: day
+          };
+          
+          displayMetadata(metadata);
+        }
+        function displayMetadata(metadata) {
+          var metadataDisplay = document.getElementById('createDate');
+          var metadataModify = document.getElementById('modifiedDate');
+          metadataDisplay.innerHTML = metadata.month + '/' + metadata.day + '/' + metadata.year;
+          metadataModify.innerHTML = metadata.month + '/' + metadata.day + '/' + metadata.year;
+          document.getElementById('createdBy').innerText = 'root';
+          document.getElementById('modifiedBy').innerText = 'root';
+        }
+
+        // Call the function to get the current date
+        getCurrentDate();
+      }
+    }
+  </Script>
+  <script>
+    function getCurrentDate() {
+        var currentDate = new Date();
+        var year = currentDate.getFullYear();
+        var month = currentDate.getMonth() + 1; // Month is zero-based
+        var day = currentDate.getDate();
+        
+        var metadata = {
+            year: year,
+            month: month,
+            day: day
+        };
+        
+        displayMetadata(metadata);
+    }
+
+    function displayMetadata(metadata) {
+        var metadataDisplay = document.getElementById('currentTime');
+        metadataDisplay.innerHTML = metadata.month + '/' + metadata.day + '/' + metadata.year;
+    }
+
+    // Call the function to get the current date
+    getCurrentDate();
+  </script>
+  <script>
+    document.getElementById("togglePan").addEventListener("click", function() {
+        var textElement = document.getElementById("toggleDiv");
+        if (textElement.style.display === "none") {
+            textElement.style.display = "block";
+        } else {
+            textElement.style.display = "none";
+        }
+    });
+  </script>
+  <script>
+    $(document).ready(function() {
+        $("#toggleLabel").click(function() {
+            $("#properties").toggle();
+            $("#icon").toggleClass("fa-chevron-down fa-chevron-left");
+        });
+    });
+  </script>
+  <script>
+    function gotoFir() {  
+      $.ajax({
+          url: 'unique_id',
+          type: 'GET',
+          success: function(data) {
+            document.getElementById("fileId").innerText = data;
+              // Update the frontend content with the unique ID as needed
           }
       });
-    </script>
-    <script>
-      $(document).ready(function() {
-          $("#toggleLabel").click(function() {
-              $("#properties").toggle();
-              $("#icon").toggleClass("fa-chevron-down fa-chevron-left");
-          });
-      });
-    </script>
-    <script>
-      $(document).ready(function () {
-        $("#imagetotextForm").submit(function (e) {
-          e.preventDefault();
-          var formData = new FormData(this);
-          console.log("submission started")
-          $("#adhar").html(
-            '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...'
-          );
-          // disable submit button
-          $("#adhar").attr("disabled", true);
-          $.ajax({
-            url: "{% url 'imagetoText' %}",
-            type: "POST",
-            data: formData,
-            cache: false,
-            contentType: false,
-            processData: false,
-            success: function (data) {
-             
-              var b64imgData = data.bytes; // bytes is the 'bytes string' show upper
+      function getCurrentDate() {
+        var currentDate = new Date();
+        var year = currentDate.getFullYear();
+        var month = currentDate.getMonth() + 1; // Month is zero-based
+        var day = currentDate.getDate();
+        
+        var metadata = {
+            year: year,
+            month: month,
+            day: day
+        };
+        
+          displayMetadata(metadata);
+      }
 
-              imgUrl = "data:image/jpg;base64, " + b64imgData;
-              document.getElementById("imgCtn").src = imgUrl;
-              var uname = document.getElementById("name").value
-              if (uname === ""){
-                document.getElementById("name").value = data.text.user_name
-              }
-              // document.getElementById("name").value = data.text.user_name;
-              document.getElementById("gender").value = data.text.gender;
-              document.getElementById("adharNo").value = data.text.adhaar_no;
-              document.getElementById("dob").value = data.text.dob;
-            
-              // remove spinner from submit button
-              $("#adhar").html("Submit");
-              // enable submit button
-              // $("#adhar").attr("disabled", false);
-              return false;
-            },
-            error: function (data) {
-              // remove spinner from submit button
-              $("#adhar").html("Submit");
-              // enable submit button
-              $("#adhar").attr("disabled", false);
-            },
-          });
-        });
-      });
-    </script>
-
-    <script>
-      $(document).ready(function () {
-        $("#imagetotextFormPan").submit(function (e) {
-          e.preventDefault();
-          var formData = new FormData(this);
-          $("#pan").html(
-            '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...'
-          );
-          // disable submit button
-          $("#pan").attr("disabled", true);
-          $.ajax({
-            url: "{% url 'imagetoTextPan' %}",
-            type: "POST",
-            data: formData,
-            cache: false,
-            contentType: false,
-            processData: false,
-            success: function (data) {
-             
-              var b64imgData = data.bytes; // bytes is the 'bytes string' show upper
-
-              imgUrl = "data:image/jpg;base64, " + b64imgData;
-              document.getElementById("imgCtnPan").src = imgUrl;
-              document.getElementById("panNo").value = data.text.pan_no;
-              document.getElementById("fatherName").value = data.text.fathers_name;
-              var uname = document.getElementById("name").value
-              if (uname === ""){
-                document.getElementById("name").value = data.text.user_name
-              }
-              
-              $("#pan").html("Submit");
-              // enable submit button
-              // $("#pan").attr("disabled", false);
-              return false;
-            },
-            error: function (data) {
-              // remove spinner from submit button
-              $("#pan").html("Submit");
-              // enable submit button
-              $("#pan").attr("disabled", false);
-            },
-          });
-        });
-      });
-    </script>
-   
-   <script>
-
-  //   $(document).ready(function () {
-  
-  //     $("#userData").submit(
-  //       function (e) {
-  //       e.preventDefault();
-  //       var formData = new FormData(this);
-  //       $("#userDataSub").html(
-  //         '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...'
-  //       );
-  //     //   // disable submit button
-  //       $("#userDataSub").attr("disabled", true);
-  //       $.ajax({
-  //         url: "{% url 'insertintoDatabase' %}",
-  //         type: "POST",
-  //         data: formData,
-  //         cache: false,
-  //         contentType: false,
-  //         processData: false,
-  //         success: function (data) {
-  //           if (data.ret_val === 0){
-  //           document.getElementById("mongoid").value = data.vals._id;
-  //           document.getElementById("mongoid").disabled = true;
-  //           $("#userID").removeAttr("hidden");
-
-  //           $("#userDataSub").html("Submit");
-  //           $("#userData :input").prop("readonly", true);
-  //           // enable submit button
-  //           // $("#userDataSub").attr("disabled", false);
-  //           }else{
-  //             // document.getElementById('userexists').innerText = "User Exists";
-  //             $("#modal-notification").modal('show');
-  //             // $("#userexists").removeAttr("hidden");
-  //             $("#userDataSub").html("Submit");
-  //           // $("#userDataSub").attr("disabled", false);
-  //           }
-  //           return false;
-  //         },
-  //         error: function (data) {
-  //           // remove spinner from submit button
-  //           $("#userDataSub").html("Submit");
-  //         //   // enable submit button
-  //           $("#userDataSub").attr("disabled", false);
-  //         },
-  //       });
-  //     });
-  // });
+      function displayMetadata(metadata) {
+          var metadataDisplay = document.getElementById('createDate');
+          metadataDisplay.innerHTML = metadata.month + '/' + metadata.day + '/' + metadata.year;
+          document.getElementById('createdBy').innerText = 'root';
+      }
+      getCurrentDate();
+    }
   </script>
-<script>
-
-function formReset () {
-  document.getElementById("imagetotextForm").reset();
-  document.getElementById("imagetotextFormPan").reset();
-  document.getElementById("userData").reset();
-} 
-</script>
-<script> 
-   $(document).ready(function () { 
+  <script>
+    $(document).ready(function() {
+      $('#fileInput').on('change', function() {
+          var file = this.files[0];
+          var formData = new FormData();
+          formData.append('file', file);
   
-      $("#userData").submit(
-        function (e) {
-        e.preventDefault();
-        var formData = new FormData(this);
-        $("#userDataSub").html(
-          '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...'
-        );
-      //   // disable submit button
-        $("#userDataSub").attr("disabled", true);
-        $.ajax({
-          url: "{% url 'insertintoDatabase' %}",
-          type: "POST",
-          data: formData,
-          cache: false,
-          contentType: false,
-          processData: false,
-          success: function (data) {
-            if (data.ret_val === 0){
-            document.getElementById("mongoid").value = data.vals._id;
-            
-            document.getElementById("mongoid").disabled = true;
-            $("#userID").removeAttr("hidden");
-
-            $("#userDataSub").html("Submit");
-            $("#userData :input").prop("readonly", true);
-            // enable submit button
-            // $("#userDataSub").attr("disabled", false);
-            }else{
-               $("#modal-notification").modal('show');
-              document.getElementById('userexists').innerText = "User Exists";
-              $("#userexists").removeAttr("hidden");
-              $("#userDataSub").html("Submit");
-            $("#userDataSub").attr("disabled", false);
-            }
-            return false;
-          },
-          error: function (data) {
-            // remove spinner from submit button
-            $("#userDataSub").html("Submit");
-          //   // enable submit button
-            $("#userDataSub").attr("disabled", false);
-          },
-        });
+          $.ajax({
+              url: 'extract_metadata',
+              type: 'POST',
+              headers: {
+                  'Content-Type': 'application/json',
+                  'X-CSRFToken': '{{ csrf_token }}'
+              },
+              data: formData,
+              processData: false,
+              contentType: false,
+              success: function(data) {
+                  $('#createdDate').text(data.created_date);
+                  $('#createBy').text(data.author);
+              },
+              error: function() {
+                  alert('Error occurred while processing the file.');
+              }
+          });
       });
   });
-  </script> 
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/exif-js"></script>
+  <script>
+    function extractMetadatas() {
+        var fileInput = document.getElementById('fileInput');
+        var file = fileInput.files[0];
+        console.log('file', file)
+        if (file) {
+          EXIF.getData(file, function() {
+              var metadata = EXIF.getAllTags(this);
+              displayMetadata(metadata);
+              console.log('metadata', metadata);
+          });
+        }
+    }
+  </script>
+  <script>
+    function extractMetadata() {
+        var fileInput = document.getElementById('fileInput');
+        var file = fileInput.files[0];
+        var fileType = file.type;
+        console.log('type================>',fileType)
 
-<script>
-  $(document).ready(function () {
-
-    $("#search-main").submit(
-      function (e) {
-      e.preventDefault();
-      var formData = new FormData(this);
-      $("#cardSearch").html(
-        '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...'
-      );
-    //   // disable submit button
-      $("#cardSearch").attr("disabled", true);
-      $.ajax({
-        url: "{% url 'searchDatabase' %}",
-        type: "POST",
-        data: formData,
-        cache: false,
-        contentType: false,
-        processData: false,
-        success: function (data) {
-          console.log("{{user.is_superuser}}")
-          if (Object.keys(data.userinfo).length > 0){
-            // console.log(data.userinfo)
-            document.getElementById("mongoid").value = data.userinfo._id;
-            // document.getElementById("recordid").disabled = true;
-            // $("#userData").attr("disabled", true);
-            $("#userID").removeAttr("hidden");
-            document.getElementById("name").value = data.userinfo.user_name;
-            document.getElementById("dob").value = data.userinfo.dob;
-            document.getElementById("gender").value = data.userinfo.gender;
-            document.getElementById("fatherName").value = data.userinfo.fathers_name;
-            document.getElementById("adharNo").value = data.userinfo.adhaar_no;
-            document.getElementById("panNo").value = data.userinfo.pan_no;
-            $("#userData :input").prop("readonly", true);
-            $("#editForm").removeAttr("hidden");
-            if ("{{user.is_superuser}}" === "True"){
-            document.getElementById("recordid").value = data.userinfo._id;
-            $("#userDataDel").removeAttr("hidden");
-            $("#userDataSub").prop("hidden", true);
-            }
+        if (fileType === 'application/pdf') {
+          console.log('pdf')
+            // Extract metadata from PDF file
+            pdfjsLib.getDocument(file).promise.then(function(pdf) {
+                pdf.getMetadata().then(function(metadata) {
+                  
+                    console.log('pdf--------------->', metadata)
+                    displayMetadata(metadata);
+                });
+            });
+        } else if (fileType === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' || fileType === 'application/msword') {
+            console.log('doc');
+            // Extract metadata from DOC file (assuming you have the necessary library)
+            mammoth.extractRawText({ arrayBuffer: file }).then(function(result) {
+                var metadata = {
+                    createdDate: result.value.createdDate,
+                    author: result.value.author
+                };
+                console.log('doc--------------->', metadata)
+                displayMetadata(metadata);
+            });
+        } else if (fileType === 'image/jpeg' || fileType === 'image/png') {
+            // Extract metadata from image file
+            console.log('img')
+            EXIF.getData(file, function() {
+                var metadata = {
+                    createdDate: this.exifdata.DateTimeOriginal,
+                    author: this.exifdata.Artist
+                };
+                console.log('img--------------->', metadata)
+                displayMetadata(metadata);
+            });
+        } else {
+          
+            function getCurrentDate() {
+              var currentDate = new Date();
+              var year = currentDate.getFullYear();
+              var month = currentDate.getMonth() + 1; // Month is zero-based
+              var day = currentDate.getDate();
+              
+              var metadata = {
+                  year: year,
+                  month: month,
+                  day: day
+              };
+              
+              displayMetadata(metadata);
           }
-          $("#cardSearch").html("Search");
-          $("#cardSearch").attr("disabled", false);
-          return false;
-        },
-        error: function (data) {
-          // remove spinner from submit button
-          $("#cardSearch").html("cardSearch");
-        //   // enable submit button
-          $("#userDataSub").attr("disabled", false);
-        },
-      });
-    });
-});
+
+          function displayMetadata(metadata) {
+              var metadataDisplay = document.getElementById('createDate');
+              metadataDisplay.innerHTML = metadata.month + '/' + metadata.day + '/' + metadata.year;
+              document.getElementById('createdBy').innerText = 'root';
+          }
+        }
+    }
+
+    function displayMetadata(metadata) {
+      console.log(metadata)
+      document.getElementById('createDate').innerText = metadata.createdDate;
+      document.getElementById('createdBy').innerText = metadata.author;
+    }
 </script>
 
-<script>
-function formEdit(){
-  $("#userData :input").prop("readonly", false);
-  $("#mongoid").prop("disabled", false);
-  $("#mongoid").prop("readonly", true);
-  // $("#mongoid").prop("disabled", true);
-  $("#editForm").prop("hidden", true);
-  // $("#updateForm").removeAttr("hidden");
-  $("#userDataSub").prop("hidden", false);
-  $("#userDataSub").html("Update")
-}
 
-</script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <link
   rel="stylesheet"
   href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css"
 />
-<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
-<script> 
- //   var cardType = "adhar"; -->
- //   $("input[name=flexRadioDefault]").change(function () { -->
- //     cardType = $("input[name=flexRadioDefault]:checked").val(); -->
- //     console.log(cardType); -->
- //   }); -->
- //   console.log(cardType); -->
- //   if (cardType === "adhar") { -->
-     $(function () { 
-       $("#searchBar").autocomplete({ 
-         source: function (request, response) { 
-           $.ajax({ 
-             url: "{% url 'adhar-autocomplete' %}", 
-         dataType: "json", 
-             data: { 
-               term: request.term, 
-               cardType: $("input[name=searchCard]:checked").val(), 
-             }, 
-             success: function (data) { 
-               response(data); 
-               console.log(data)
-             }, 
-           }); 
-         }, 
-
-         minLength: 3, // Minimum characters before triggering autocomplete -->
-       }); 
-     }); 
- //   } else { 
-     // console.log("Pan"); 
- //   } 
- </script>
 
     {%endblock %}
         

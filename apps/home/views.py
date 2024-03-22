@@ -9,6 +9,7 @@ import string
 import cv2
 import numpy as np
 import pymongo
+import json
 from bson import ObjectId
 from django import template
 from django.contrib.auth.decorators import login_required, user_passes_test
@@ -25,6 +26,10 @@ from django.views import View
 # from googletrans import Translator
 from datetime import date
 from django.shortcuts import render
+from datetime import date
+from docx import Document
+import fitz
+from PIL import Image
 
 def my_view(request):
     kmsdata = [{file_id: 0, name: 'FGA11', file_status: "Work in Progress", updatingDate: "03/20/2024", transition: "root" }]
@@ -34,10 +39,11 @@ def my_view(request):
     }
 
     return render(request, 'kms.html', context)
+# import shortuuid
+
+import uuid
 
 
-from .detect import get_data
-from .mongo_update import insert_record
 
 
 # client = pymongo.MongoClient("mongodb://mongodb_new_ocr:27017/")
@@ -50,11 +56,10 @@ from .mongo_update import insert_record
 # from django.shortcuts import render
 # from django.http import JsonResponse
 from pymongo import MongoClient
-from .models import MongoData
 
 client = MongoClient('mongodb://localhost:27017')
-db = client['mydatabase']
-collection = db['mycollection']
+db = client['userdata']
+collection = db['userCollection']
 
 def mongodb_test(request):
     return render(request, 'home/mongodb_test.html')
@@ -62,37 +67,122 @@ def mongodb_test(request):
 # @login_required(login_url="/login/")
 def save_to_mongo(request):
     if request.method == 'POST':
-        text=request.POST.get('text')
-        print(text)
-        
-        
-        mongo_data = MongoData.objects.create(text=text)
-        # result = collection.insert_one({'text': text})
-        if mongo_data:
-            return JsonResponse("Success")
+        data = json.loads(request.body)
+        status = data.get('status')
+        fileName = data.get('file_name')
+        print('status', status)
+        result = collection.insert_one({'status': status, 'file_name': fileName})
+        if result:
+            return JsonResponse({"message": "Success"})
         else:
-            return JsonResponse("Failed")
-    return JsonResponse({"message": "Method Not Allowed"}, status=405)
+            return JsonResponse({"message" : "Failed"})
+    
+    return render(request, 'home/mongodb_test.html')
 
+def send_custom_data(request):
+    # print('d')
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        print('data', data)
+        status = data.get('status')
+        fileName = data.get('file_name')
+        fileId = data.get('file_id')  
+        assign =  data.get('assigned')
+        label =  data.get('labeled')
+        createDate =  data.get('create_date')
+        createBy =  data.get('create_by')
+        modifiedDate =  data.get('modified_date')
+        modifiedBy = data.get( 'modified_by')
+        priority = data.get( 'priorityed')
+        system =  data.get('systemed')
+        approvedBy = data.get('approved_by')
+        currentTime =  data.get('current_time')
+        target_date =  data.get('target_date')
+        print('status', status)
+        result = collection.insert_one({'status': status, 
+            'file_name': fileName,
+            'fileId':fileId,  
+            'assign': assign,
+            'label': label,
+            'createDate': createDate,
+            'createBy': createBy,
+            'modifiedDate': modifiedDate,
+            'modifiedBy': modifiedBy,
+            'priority': priority,
+            'system': system,
+            'approvedBy':approvedBy,
+            'approvedDate': currentTime,
+            'target_date': target_date,
+        })
+        if result:
+            return JsonResponse({"message": "Success"})
+        else:
+            return JsonResponse({"message" : "Failed"})
 # @login_required(login_url="/login/")
 def find_in_mongo(request):
     if request.method == 'POST':
-        text = request.POST.get('content')
+        data = json.loads(request.body)
+        text = data.get('content')
         print('content', text)
         result = collection.find_one({'text': text})
         if result:
             return HttpResponse('success')
         else:
             return HttpResponse('Failed')
+def unique_id(request):
+    unique_id = str(uuid.uuid4())[:10]  # Generate a unique ID and take the first 8 characters
+    print ('unique_id', unique_id)
+    if request.method == 'GET':
+        return HttpResponse(unique_id)
+    return render(request, 'home/index.html', {'unique_id': unique_id})
 
-db = client["userData"]
-collection = db['userCollection']
+from .detect import get_data
+from .mongo_update import insert_record
 
-# ------- Admin --------------------
+
+from .models import Employee
+
+# def extract_metadata(request):
+#     print('extra_meta_data')
+#     if request.method == 'POST':
+#         uploaded_file = request.FILES['file']
+#         file_type = uploaded_file.name.split('.')[-1].lower()
+
+#         if file_type == 'docx':
+#             doc = Document(uploaded_file)
+#             created_date = doc.core_properties.created
+#             author = doc.core_properties.author
+#         elif file_type == 'pdf':
+#             pdf_document = fitz.open(uploaded_file)
+#             metadata = pdf_document.metadata
+#             created_date = metadata.get('creationDate')
+#             author = metadata.get('author')
+#         elif file_type in ['jpg', 'jpeg', 'png']:
+#             image = Image.open(uploaded_file)
+#             created_date = image.info.get('DateTimeOriginal')
+#             author = image.info.get('Artist')
+#         else:
+#             created_date = date.today()
+#             author = 'root'
+
+#         return JsonResponse({'created_date': created_date, 'author': author})
+    
+#     return render(request, 'home/index.html')
+
 @login_required(login_url="/login/")
-def get_todays_date(request):
-    today = date.today()
-    return render(request, 'index.html', {'today': today})
+def add_employee(request):
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        role = request.POST.get('role')
+        Employee.objects.create(name=name, role=role)
+    
+    employees = Employee.objects.all()
+    return render(request, 'userManagement.html', {'employees': employees})
+# ------- Admin --------------------
+# @login_required(login_url="/login/")
+# def get_todays_date(request):
+#     today = date.today()
+#     return render(request, 'index.html', {'today': today})
 
 # @login_required(login_url="/login/")
 # def kmsDataView(request):

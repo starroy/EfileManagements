@@ -111,7 +111,15 @@ DATABASES = {
      'default': {
          'ENGINE': 'django.db.backends.sqlite3',
          'NAME': 'db.sqlite3',
-     }
+     },
+    'mongodb': {
+        'ENGINE': 'djongo',
+        'NAME': 'your_mongodb_database_name',
+        'ENFORCE_SCHEMA': True,
+        'CLIENT': {
+            'host': 'mongodb://localhost:27017',
+        }
+    }
  }
 #
 # Password validation

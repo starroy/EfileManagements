@@ -5,9 +5,39 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MongoDB Test</title>
+        
+</head>
+<body>
+    <h1>MongoDB Test</h1>
+    <form id="mongoForm" method="POST" action="save_to_mongo">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="inputText">Enter Text:</label>
+            <input type="text" id="saveText" class="form-control" name="content">
+            <button type="button" onclick="saveToMongo()">Save to MongoDB</button>
+            <label id="saveLabel"></label>
+        </div>
+    </form>
+    
+
+    <br>
+    
+    <form id="mongoForm" method = "POST", action="{% url 'find_in_mongo'%}">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="inputText">Find Text:</label>
+                <input type="text" id="findText"
+                    class="form-control"
+                    name="text"
+                >
+                <button type="button" onclick="findinMongo()">Save to MongoDB</button>
+            <label id="findLabel"></label>
+        </div>
+    </form>
     <script>
         function saveToMongo() {
-            var text = document.getElementById('inputText').value;
+            var text = document.getElementById('saveText').value;
+            console.log(text);
             fetch('save_to_mongo', {
                 method: 'POST',
                 headers: {
@@ -25,7 +55,8 @@
             });
         }
         function findinMongo() {
-            var text = document.getElementById('inputText').value;
+            var text = document.getElementById('findText').value;
+            console.log(text);
             fetch('find_in_mongo', {
                 method: 'POST',
                 headers: {
@@ -44,34 +75,5 @@
             });
         }
         </script>
-        
-</head>
-<body>
-    <h1>MongoDB Test</h1>
-    <form id="mongoForm" method="POST" action="save_to_mongo">
-        {% csrf_token %}
-        <div class="form-group">
-            <label for="inputText">Enter Text:</label>
-            <input type="text" id="inputText" class="form-control" name="content">
-            <button type="button" onclick="saveToMongo()">Save to MongoDB</button>
-            <label id="saveLabel"></label>
-        </div>
-    </form>
-    
-
-    <br>
-    
-    <form id="mongoForm" method = "POST", action="{% url 'find_in_mongo'%}">
-        {% csrf_token %}
-        <div class="form-group">
-            <label for="inputText">Find Text:</label>
-                <input type="text" id="inputText"
-                    class="form-control"
-                    name="text"
-                >
-                <button type="button" onclick="findinMongo()">Save to MongoDB</button>
-            <label id="findLabel"></label>
-        </div>
-    </form>
 </body>
 </html>
