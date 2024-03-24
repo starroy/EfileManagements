@@ -10,17 +10,13 @@
 
     <div class="container">
       <div class="row custom-full-width mb-4">
-        <div class="custom-full-width mt-5 text-center mb-5, d-flex justify-content-between">
-          <div class = "d-flex justify-content-space-between, col-6">
-            <button id = "download"  class="btn btn-primary  mt-4  col-5 align-items-center" id="adhar">
-              Download
-            </button>
-            <div class="col-1"></div>
-            <button id = "create"  class="btn btn-primary  mt-4  col-5 align-items-center" id="adhar">
-              Create
-            </button>
-            <div class="col-1"></div>
-          </div>
+        <div class="col-md-9 mt-5 mb-5, d-flex justify-content-between px-6">
+          <button id = "Upload" class="btn btn-primary align-items-center col-md-5">
+            Upload
+          </button>
+          <button id = "Create" class="btn btn-primary align-items-center col-md-5">
+            Create
+          </button>
           {% comment %} <form class="search form-group" id="search-main" >
             <label for="searchBar">Search User</label>
             <div class="input-group input-group-merge search-bar">
@@ -31,6 +27,7 @@
               </span>
                 <input type="text" class="form-control col-md-2" id="searchBar" placeholder="Search" aria-label="Search" aria-describedby="topbar-addon" name="searchDoc">
             </div>
+
           </form> {% endcomment %}
         </div>
       </div>
@@ -41,14 +38,14 @@
       <iframe name="votar" style="display:none;"></iframe>
       <div class = "col-md-8">
         <div class = "row">
-          <div class="col-md-6 mt-2">
-            <div>
+          <div class="col-md-10 mt-4">
+            <div style = "display: none;" id="upload_file">
             <!-- <div class="col-md-12"> -->
-              <div class="form-group">
-                <label for="image">Upload File</label>
+              <div class="form-group flex-row d-flex flex-row align-items-center" >
+                <label for="image" style="margin-right: 1em">Upload File</label>
                 <input
                   type="file"
-                  class="form-control"
+                  class="form-control col-md-6"
                   id = "fileInput"
                   accept=".docx, .pdf, .jpg, .jpeg, .png"
                   onchange="extractMetadatas()"
@@ -56,51 +53,53 @@
               </div>
             </div>
           </div>
-          <div class="col-lg-6 mt-2">
-            <div>
-              <div class="form-group">
+          <div class="col-md-10" style = "display: none;" id = "use_template">
+            <div class = "d-flex flex-row align-items-center">
+              <div class="form-group" style = "margin-right: 1em;">
                 <label for="imagepan">Use Template</label>
               </div>
+              <div class="col-md-10">
+                <select name="status" id="temple" class="form-control" onchange="handleSelectChange()">
+                  <option selected>----Select----</option>
+                  <option value="Customer Form">Customer Form</option>
+                  <option value="Fir Form">FIR Form</option>
+                  <option value="MSDA Form">MSDA Form</option>
+                </select>
+              </div>
               <!-- Django template with Bootstrap for responsive button titles -->
-              <div class="flex-row custom-full-width">
-                <button type="submit" class="btn btn-primary btn-submit mb-4 col-4" id="togglePan" onclick="generate_id()">
-                    <div class="d-flex justify-content-center align-items-center flex-column">
-                        <span class="d-none d-lg-block">Customer Form</span>
-                        <span class="d-block d-lg-none">Customer Form</span>
-                    </div>
-                </button>
+              {% comment %} <div class="flex-row custom-full-width">
                 <a href="{% url 'firform'%}" target="_blank" >
                   <button type="submit" class="btn btn-primary btn-submit mb-4 ml-4 col-4" id="toggleFIR" onclick="gotoFir()">
                       <div class="d-flex justify-content-center align-items-center flex-column">
-                          <span class="d-none d-lg-block">FIR Form</span>
-                          <span class="d-block d-lg-none">FIR Form</span>
+                        <span class="d-none d-lg-block">FIR Form</span>
+                        <span class="d-block d-lg-none">FIR Form</span>
                       </div>
                   </button>
                 </a>
                 <a href="{% url 'mahadiscomreg'%}" target="_blank" >
                   <button type="submit" class="btn btn-primary btn-submit mb-4 ml-4 col-4" id="toggleMSDA" onclick="gotoFir()">
                       <div class="d-flex justify-content-center align-items-center flex-column">
-                          <span class="d-none d-lg-block">MSDA Form</span>
-                          <span class="d-block d-lg-none">MSDA Form</span>
+                        <span class="d-none d-lg-block">MSDA Form</span>
+                        <span class="d-block d-lg-none">MSDA Form</span>
                       </div>
                   </button>
                 </a>
-              </div>
+              </div> {% endcomment %}
             </div>
           </div>
         </div>
         <div id = "toggleDiv" style = "display: none;">
           
-          <h2 class="text-center">
+          <h2 class="text-center mt-4">
             Customer Information
           </h2>
           <div class="row col-md-12 mt-4 mb-5 d-flex">
             <div class="card col-md-12">
-              <div class="col-md-12" id="userData">
-                <div class="col-md-12 text-center mt-3">
-                  <label class="form-label  fs-2" for="name">Edit</label>
+              <div class="col-md-12 d-flex flex-column align-items-end" id="userData">
+                <div class="col-md-7 text-center mt-3 d-flex flex-row  justify-content-between align-items-center px-4">
+                  {% comment %} <span class = "col-md-3"/> {% endcomment %}
                 </div>
-                <div class ='row justify-content-between aling-items-center col-md-12 px-3'>
+                <div class ='row justify-content-between aling-items-center col-md-12 px-1 mx-1'>
                   <div class="col-md-4 gap-3 py-2 px-3">
                     <label class="form-label text-nowrap" for="dob">Attach</label>
                     <input
@@ -121,7 +120,7 @@
                       name="linked"
                       {% comment %} readonly  {% endcomment %}
                       onblclick="showModal()" 
-                      placeholder="Double-click to input URL"
+                      placeholder="Input URL"
                     />
                     <div class="modal" id="urlModal" tabindex="-1" role="dialog">
                         <div class="modal-dialog" role="document">
@@ -147,7 +146,7 @@
                     />
                   </div>
                 </div>
-                <div class ='row justify-content-between aling-items-center col-md-12 mt-4 px-3'>
+                <div class ='row justify-content-between aling-items-center col-md-12 mt-4 px-1 mx-1'>
                   <div class="col-md-6 gap-3 py-2 px-3">
                     <label class="form-label text-nowrap" for="customerName">Customer Name</label>
                     <input
@@ -167,7 +166,7 @@
                     />
                   </div>
                 </div>
-                <div class ='row justify-content-between aling-items-center col-md-12 mt-4 px-3'>
+                <div class ='row justify-content-between aling-items-center col-md-12 mt-4 px-1 mx-1'>
                   <div class="col-md-6 gap-3 py-2 px-3">
                     <label class="form-label text-nowrap" for="panNo">PAN Number</label>
                     <input
@@ -189,33 +188,22 @@
                 </div>
                 <div class="col-md-12 gap-6 py-2 px-3">
                   <label class="form-label text-nowrap" for="gender">Short Description</label>
-                  <textarea   cols="50" rows="2" id="shortDescription" class="form-control" style="font-size: 18px;">{{result}}</textarea>
+                  <textarea   cols="50" rows="2" id="shortDescription" class="form-control" style="font-size: 15px;">{{result}}</textarea>
                 </div>
                 <div class="col-md-12 gap-6 py-2 px-3">
                   <label class="form-label text-nowrap" for="gender">Details</label>
-                  <textarea   cols="50" rows="10" id="detailsitem" class="form-control" style="font-size: 18px;">{{result}}</textarea>
+                  <textarea   cols="50" rows="10" id="detailsitem" class="form-control" style="font-size: 15px;">{{result}}</textarea>
                 </div>
                 <div class = 'd-flex flex-row col-md-12'>
-                  <div class="col-md-7 gap-6 py-2 px-3">
-                    <label class="form-label text-nowrap" for="gender">Comment</label>
-                    <textarea   cols="50" rows="2" id="comment" class="form-control" style="font-size: 18px;">{{result}}</textarea>
-                  </div>
                   <div class="d-flex mx-3 gap-3 flex-row justify-center align-items-center">
-                    <div class="form-group col-md-7">
-                      {% comment %} s<button
-                        class="btn btn-primary btn-submit mt-4"
-                        style="margin-bottom: 9px"
-                        onclick="sendCustomData()"
-                      >
-                        Submit
-                      </button> {% endcomment %}
+                    <form class="form-group col-md-6" onsubmit="submitForm(event)">
                       <button id = "download"  class="btn btn-primary  mt-4  col-md-12 align-items-center" id="adhar"
-                      onclick="sendCustomData()"
+                        {% comment %} onclick="sendCustomData()" {% endcomment %}
                       >
-                        Submit
+                        Download
                       </button>
-                    </div>
-                    <div class="form-group col-md-7">
+                    </form>
+                    <div class="form-group col-md-6">
                       <a 
                         type="button" 
                         class="btn btn-primary btn-submit mt-4 col-md-12"
@@ -225,13 +213,27 @@
                         Save as Draft
                       </a>
                     </div>
+                    <div class="form-group col-md-6">
+                      <button id = "download"  class="btn btn-primary  mt-4  col-md-12 align-items-center" id="adhar"
+                        onclick="sendCustomData()"
+                      >
+                        Submit
+                      </button>
+                    </div>
                   </div>
+                </div>
+                <div class="col-md-12 gap-6 py-2 px-3 flex-start">
+                  <label class="form-label text-nowrap" for="gender">Comment</label>
+                  <textarea   cols="50" rows="2" id="comment" class="form-control" style="font-size: 15px;">{{result}}</textarea>
                 </div>
               </div>
               <!-- </textarea> -->
               <p id="userexists"></p>
             </div>
           </div>
+        </div>
+        <div id = "save_as_draft" style = "display: none;">
+
         </div>
         <div class="modal fade" id="modal-notification" tabindex="-1" role="dialog" aria-labelledby="modal-notification" aria-hidden="true">
           <div class="modal-dialog modal-white modal-dialog-centered" role="document">
@@ -274,7 +276,7 @@
                   <option value="For Approval">For Approval</option>
                   <option value="Approved">Approved</option>
                   <option value="Completed">Completed</option>
-                  <option value="work">Closed</option>
+                  <option value="Closed">Closed</option>
               </select>
             </div>
             <br>
@@ -294,7 +296,7 @@
             <br>
             Labels: <input
               class="form-control"
-              id="label"
+              id="labels"
               type="text"
               name="adharNo"
             /><br>
@@ -357,6 +359,88 @@
           cancelModal();
       }
   </script>
+  
+  <script>
+    function submitForm(event) {
+      event.preventDefault();
+      var attach = document.getElementById('attach').value;
+      var linkfile = document.getElementById('urlInput').value;
+      var approved = document.getElementById('approved').value;
+      var customerName = document.getElementById('customerName').value;
+      var birth = document.getElementById('birth').value;
+      var panNumber = document.getElementById('panNumber').value;
+      var adharNumber = document.getElementById('adharNumber').value;
+      var shortDescription = document.getElementById('shortDescription').value;
+      var detailsitem = document.getElementById('detailsitem').value;
+      var url = "{% url 'download_pdf' %}?attach=" + attach + "&linkfile=" + linkfile + "&approved=" + approved + "&birth=" + birth + "&panNumber=" + panNumber + "&adharNumber=" + adharNumber + "&shortDescription=" + shortDescription + "&detailsitem=" + detailsitem ;
+      window.location.href = url;
+      console.log('shortDescription', shortDescription, 'detailsitem', detailsitem);
+    }
+  </script>
+
+  <script>
+    let cnt =0;
+    function handleSelectChange() {
+      var selectedOption = document.getElementById("temple").value;
+      if (selectedOption === "Customer Form") {
+        console.log('selectedOption', selectedOption)
+        cnt = cnt + 1;
+        let cntt= cnt % 2;
+        if (cntt == 0){
+          document.getElementById('createDate').innerText = '';
+          document.getElementById('createdBy').innerText = '';
+          document.getElementById('modifiedDate').innerText = '';
+          document.getElementById('modifiedBy').innerText = '';
+          document.getElementById("fileId").innerText = '';
+          
+        }
+        else {
+          $.ajax({
+              url: 'unique_id',
+              type: 'GET',
+              success: function(data) {
+                document.getElementById("fileId").innerText = data;
+                  // Update the frontend content with the unique ID as needed
+              }
+          });
+          function getCurrentDate() {
+            var currentDate = new Date();
+            var year = currentDate.getFullYear();
+            var month = currentDate.getMonth() + 1; // Month is zero-based
+            var day = currentDate.getDate();
+            
+            var metadata = {
+                year: year,
+                month: month,
+                day: day
+            };
+            
+            displayMetadata(metadata);
+          }
+          function displayMetadata(metadata) {
+            var metadataDisplay = document.getElementById('createDate');
+            var metadataModify = document.getElementById('modifiedDate');
+            metadataDisplay.innerHTML = metadata.month + '/' + metadata.day + '/' + metadata.year;
+            metadataModify.innerHTML = metadata.month + '/' + metadata.day + '/' + metadata.year;
+            document.getElementById('createdBy').innerText = 'root';
+            document.getElementById('modifiedBy').innerText = 'root';
+          }
+  
+          // Call the function to get the current date
+          getCurrentDate();
+        }
+        var textElement = document.getElementById("toggleDiv");
+        textElement.style.display = "block";
+      }
+      else if (selectedOption === "Fir Form") {
+        window.location.href = 'firform';
+      }
+      else if (selectedOption === "MSDA Form") {
+        window.location.href = 'mahadiscomreg'
+      }
+        // You can perform additional actions based on the selected option here
+    }
+  </script>
   <Script>
     {% comment %} var unique_id = shortuuid.ShortUUID().random(length=8)
     var paragraph = document.getElementById("uniqueid");
@@ -376,10 +460,9 @@
       var system = document.getElementById('system').value;
       var fileName = document.getElementById('fileName').value;
       var assign = document.getElementById('assign').value;
-      var label = document.getElementById('label').value;
+      var labels = document.getElementById('labels').value;
       var createBy = document.getElementById('createdBy').innerHTML;
       var targetDate = document.getElementById('target_date').value;
-      var customData = {};
       var attach = document.getElementById('attach').value;
       var linkfile = document.getElementById('urlInput').value;
       var approved = document.getElementById('approved').value;
@@ -391,7 +474,7 @@
       var detailsitem = document.getElementById('detailsitem').value;
       var comment = document.getElementById('comment').value;
       console.log(text, fileName, fileId, createDate, createdBy, modifiedDate, modifiedBy, approvedBy, currentTime,
-        fileName, assign, label, priority, system, targetDate
+        fileName, assign, labels, priority, system, targetDate
       );
       fetch('send_custom_data', {
           method: 'POST',
@@ -403,7 +486,7 @@
             file_name: fileName, 
             file_id: fileId,  
             assigned: assign,
-            labeled: label,
+            labeled: labels,
             create_date: createDate,
             create_by: createBy,
             modified_date: modifiedDate,
@@ -437,7 +520,7 @@
           console.error('Error:', error);
       });
     }
-    let cnt =0;
+    {% comment %} let cnt =0;
     function generate_id() {
       cnt = cnt + 1;
       let cntt= cnt % 2;
@@ -483,8 +566,16 @@
 
         // Call the function to get the current date
         getCurrentDate();
+        document.getElementById("togglePan").addEventListener("click", function() {
+          var textElement = document.getElementById("toggleDiv");
+          if (textElement.style.display === "none") {
+              textElement.style.display = "block";
+          } else {
+              textElement.style.display = "none";
+          }
+        });
       }
-    }
+    } {% endcomment %}
   </Script>
   <script>
     function getCurrentDate() {
@@ -506,6 +597,7 @@
         var metadataDisplay = document.getElementById('currentTime');
         metadataDisplay.innerHTML = metadata.month + '/' + metadata.day + '/' + metadata.year;
     }
+  
 
     // Call the function to get the current date
     getCurrentDate();
@@ -518,6 +610,22 @@
         } else {
             textElement.style.display = "none";
         }
+    });
+  </script>
+  <script>
+    document.getElementById("Upload").addEventListener("click", function() {
+      var uploadElement = document.getElementById("upload_file");
+      var templateElement = document.getElementById("use_template");
+      uploadElement.style.display = "block";
+      templateElement.style.display = "none";
+    });
+  </script>
+  <script>
+    document.getElementById("Create").addEventListener("click", function() {
+      var uploadElement = document.getElementById("upload_file");
+      var templateElement = document.getElementById("use_template");
+      uploadElement.style.display = "none";
+      templateElement.style.display = "block";
     });
   </script>
   <script>

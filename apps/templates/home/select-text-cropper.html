@@ -24,20 +24,25 @@
   </div> -->
   
   <div class="pt-3 mt-3 pb-3 d-flex justify-content-center">
-<h1>Select Text from Image</h1> 
+{% comment %} <h1>Select Text from Image</h1>  {% endcomment %}
   </div>  
 <!-- Content -->
-  <div class="container pt-3 " style="margin-top: 30px;">
-   
+  <div class="container pt-3" style="margin-top: 30px;">
+       <div class = "d-flex flex-row align-items-center">
+              <label>Select Language</label>
+              <select name="lang" id="lang" class="form-control" style = "width: 10em; margin-left:3em;">
+                     <option value="en" selected>English</option>
+                     <option value="hi">Hindi</option>
+                     <option value="mr">Marathi</option>
+              </select>
+       </div>
        <div class="flex   gap-4 mb-4 justify-content-between">
-              {%if recent_images%} 
-              
-              {%for image in request.session.recent_images%}
-            <a href="#" onclick="useImage('{{image}}')"> <img src="data:image/jpeg;base64,{{image}}" alt="" height="60px" width="100px" style="width: 200px;margin-right: 20px;"></a>
+           {%if recent_images%} 
+              {% comment %} {%for image in request.session.recent_images%}
+              <a href="#" onclick="useImage('{{image}}')"> <img src="data:image/jpeg;base64,{{image}}" alt="" height="60px" width="100px" style="width: 200px;margin-right: 20px;"></a>
                      <!-- <p>{{image}}</p> -->
-              {%endfor%}
-       
-              {%endif%}
+              {%endfor%} {% endcomment %}
+           {%endif%}
        </div>
     <div class="row">
       
@@ -45,7 +50,7 @@
 
     <div class="row" id="actions">
      
-      <div class="col-md-9 docs-buttons">
+       <div class="col-md-12 docs-buttons">
         <!-- <div class="btn-group"> -->
           <!-- <button type="button" class="btn btn-primary" data-method="setDragMode" data-option="crop" title="Crop">
             <span class="docs-tooltip" data-toggle="tooltip" title="cropper.setDragMode(&quot;crop&quot;)">
@@ -56,70 +61,98 @@
 
 
         
-
-        <div class="d-flex gap-3 justify-content-left" style="text-align: center;">
-         <h4>Upload Document here </h4> 
-          <label class="btn btn-primary btn-upload" for="inputImage" title="Upload image file" >
-            <input type="file" class="sr-only" id="inputImage" name="file" accept=".jpg,.jpeg,.png,.gif,.bmp,.tiff">
-            <span class="docs-tooltip" data-toggle="tooltip" title="Select Image to upload">
-              <span class="fa fa-upload"></span>
-              <!-- Upload File -->
-            </span>
-          </label>
-        </div>
-          <div class="col-md-9">
-            <div class="img-container"  id="imageBox" hidden style="max-height: 75vh;">
-              <img src="https://fengyuanchen.github.io/cropperjs/images/picture.jpg" alt="Picture" >
-            </div>
-          </div>
-<div class="d-flex gap-3 mt-2">          
-        <!-- </div> -->
-
-        <!-- <div class="btn-group btn-group-crop"> -->
-          <button type="button" class="btn btn-primary" data-method="getCroppedCanvas"
-            data-option="{ &quot;maxWidth&quot;: 4096, &quot;maxHeight&quot;: 4096 }" id="cropCanvas" hidden>
-            <span class="docs-tooltip" data-toggle="tooltip"
-              title="Click after text selection is done.">
-              Selection Done
-            </span>
-          </button>
-
-          <form action="{%url 'selectionOCR'%}" id="runOCR" hidden method="POST">
-              {% csrf_token %}
-            <input type="text" id="origImageBytes" name="origImageBytes" hidden>
-            <input type="text" id="imageBytes" name="imageBytes" hidden>
-            <button type="submit" class="btn btn-primary">Run OCR</button>
-          </form>   
-          
-        </div>
-
-
-        <div class="modal fade docs-cropped" id="getCroppedCanvasModal" role="dialog" aria-hidden="true"
-          aria-labelledby="getCroppedCanvasTitle" tabindex="-1">
-          <div class="modal-dialog">
-            <div class="modal-content">
-              <div class="modal-header">
-                <!-- <h5 class="modal-title" id="getCroppedCanvasTitle">Cropped</h5> -->
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                </button>
+              <div class = "d-flex flex-row justify-content-around align-item-center col-md-12">
+                     <div class="d-flex justify-content-left mt-4" style="text-align: center;">
+                            <h4>Upload Image here </h4> 
+                            <label class="btn btn-primary btn-upload" for="inputImage" title="Upload image file" style ="margin-left: 1em;">
+                                   <input type="file" class="sr-only" id="inputImage" name="file" accept=".jpg,.jpeg,.png,.gif,.bmp,.tiff">
+                                   <span class="docs-tooltip" data-toggle="tooltip" title="Select Image to upload">
+                                          <span class="fa fa-upload"></span>
+                                          <!-- Upload File -->
+                                   </span>
+                            </label>
+                     </div>
+                     {% comment %} <div class="d-flex justify-content-left" style="text-align: center;margin-left: 4em">
+                            <h4>Upload PDF here </h4> 
+                            <label class="btn btn-primary btn-upload" for="inputPdf" title="Upload pdf file" style ="margin-left: 1em;">
+                                   <input type="file" class="sr-only" id="inputPdf" name="pdffile" accept=".pdf">
+                                   <span class="docs-tooltip" data-toggle="tooltip" title="Select pdf to upload">
+                                          <span class="fa fa-upload"></span>
+                                   <!-- Upload File -->
+                                   </span>
+                            </label>
+                     </div> {% endcomment %}
               </div>
-              <div class="modal-body"></div>
-              <div class="modal-footer">
-                
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <a class="btn btn-primary" id="download" href="javascript:void(0);" download="cropped.jpg" hidden>Download</a>
+              <div class="col-md-7">
+                     <div class="img-container"  id="imageBox" hidden style="max-height: 75vh;">
+                            <img src="https://fengyuanchen.github.io/cropperjs/images/picture.jpg" alt="Picture" >
+                     </div>
               </div>
-            </div>
-          </div>
-      </div>
+              <div class="col-md-12 d-flex flex-row">
+                     <div class="d-flex col-md-6 mt-2">          
+                            <!-- </div> -->
+
+                            <!-- <div class="btn-group btn-group-crop"> -->
+                            <button type="button" class="btn btn-primary" data-method="getCroppedCanvas"
+                                   data-option="{ &quot;maxWidth&quot;: 4096, &quot;maxHeight&quot;: 4096 }" id="cropCanvas" hidden
+                            >
+                                   <span class="docs-tooltip" data-toggle="tooltip"
+                                   title="Click after text selection is done.">
+                                   Selection Done
+                                   </span>
+                            </button>
+
+                            <form action="{% url 'selectionOCR'%}" id="runOCR" hidden method="POST" style ="margin-left: 2em;">
+                                   {% csrf_token %}
+                                   <input type="text" id="origImageBytes" name="origImageBytes" hidden>
+                                   <input type="text" id="imageBytes" name="imageBytes" hidden>
+                            
+                            <!-- Hidden input field to store the selected language data -->
+                                   <input type="text" id="selectedLanguage" name="selectedLanguage" hidden>
+                            
+                                   <button type="submit" class="btn btn-primary">Run OCR</button>
+                            </form>
+                            
+                     </div>
+              </div>
+              <div class ="col-md-12 d-flex flex-row mt-6">
+                     <div class ="col-8"></div>
+                     <form action="{% url 'pdfOCR'%}" id="runOCR_pdf" hidden method="POST" class="d-flex flex-column align-items-center">
+                            {% csrf_token %}
+                            <label id = "pdf_name" style = "text-align: center;"></label>
+                            <input type="file" id="originalPDF" name="originalPDF" hidden>
+                     <!-- Hidden input field to store the selected language data -->
+                            <button type="submit" class="btn btn-primary" id="ocr_btn" hidden>Run OCR</button>
+                     </form>
+              </div>
+
+              <div class="modal fade docs-cropped" id="getCroppedCanvasModal" role="dialog" aria-hidden="true"
+                     aria-labelledby="getCroppedCanvasTitle" tabindex="-1"
+              >
+              <div class="modal-dialog">
+              <div class="modal-content">
+                     <div class="modal-header">
+                     <!-- <h5 class="modal-title" id="getCroppedCanvasTitle">Cropped</h5> -->
+                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                     <span aria-hidden="true">&times;</span>
+                     </button>
+                     </div>
+                     <div class="modal-body"></div>
+                     <div class="modal-footer">
+                     
+                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                     <a class="btn btn-primary" id="download" href="javascript:void(0);" download="cropped.jpg" hidden>Download</a>
+                     </div>
+              </div>
+              </div>
+              </div>
 
        
       <!-- </div> -->
 
-      <div class="col-md-3 docs-toggles">
+              <div class="col-md-3 docs-toggles">
         
-        </div>
+       </div>
 
       </div>
     </div>
@@ -146,6 +179,51 @@
     dataTransfer.items.add(file); var inpImg = document.getElementById("inputImage"); inpImg.files =dataTransfer.files; 
    
        const e = new Event('change'); document.querySelector("#inputImage").dispatchEvent(e)});}
+
+       
+    var form = document.getElementById('runOCR');
+    var languageInput = document.getElementById('selectedLanguage');
+
+    // Get the selector tag for language
+    var languageSelector = document.getElementById('languageSelector');
+    // Add an event listener to the form submission
+    form.addEventListener('submit', function(event) {
+        // Get the selected language value from the selector
+        var selectedLanguage = lang.value;
+        
+
+        // Set the selected language value to the hidden input field
+       document.getElementById('selectedLanguage').value = selectedLanguage;
+    });
+
+    var fileInput, file;
+    document.getElementById('inputPdf').addEventListener('change', function() {
+       fileInput = document.getElementById('inputPdf');
+       file = fileInput.files[0];
+       var file_name = file.name;
+       document.getElementById('pdf_name').textContent = file_name;
+       // Display the Run OCR button after selecting the PDF file
+       document.getElementById('ocr_btn').removeAttribute('hidden');
+       // Create a FormData object to send the file to the backend upon clicking Run OCR
+   });
+   
+   var formData = new FormData();
+   formData.append('file', file, 'original.pdf');
+   print 
+   document.getElementById('runOCR_pdf').addEventListener('click', function() {
+       fetch('pdfOCR', {
+           method: 'POST',
+           body: formData,
+           headers: {
+               'X-CSRFToken': '{{ csrf_token }}'
+           }
+       })
+       .then(response => response.json())
+       .then(data => {
+           console.log(data); // Handle the response from the backend
+       })
+       .catch(error => console.error('Error:', error));
+   });
 </script>
 </body>
 

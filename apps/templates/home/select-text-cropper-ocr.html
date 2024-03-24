@@ -1,0 +1,486 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Dashboard {% endblock %} 
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+<!-- <!DOCTYPE html>
+<html>
+<head>
+  
+  <link rel="stylesheet" href="./style.css" />
+</head> -->
+
+<body>
+  <!-- <div class="jumbotron bg-primary text-white rounded-0">
+    <div class="container">
+      <div class="row">
+        
+      </div>
+    </div>
+  </div> -->
+  
+  <div class="pt-3 mt-3 pb-3 d-flex justify-content-center">
+{% comment %} <h1>Select Text from Image</h1>  {% endcomment %}
+  </div>  
+<!-- Content -->
+  <div class="container pt-3 " style="margin-top: 30px;">
+   
+       <select name="lang" id="lang" class="form-control">
+           <option value="en" selected>English</option>
+           <option value="hi">Hindi</option>
+           <option value="mr">Marathi</option>
+       </select>
+       <div class="flex   gap-4 mb-4 justify-content-between">
+           {%if recent_images%} 
+              {% comment %} {%for image in request.session.recent_images%}
+              <a href="#" onclick="useImage('{{image}}')"> <img src="data:image/jpeg;base64,{{image}}" alt="" height="60px" width="100px" style="width: 200px;margin-right: 20px;"></a>
+                     <!-- <p>{{image}}</p> -->
+              {%endfor%} {% endcomment %}
+           {%endif%}
+       </div>
+    <div class="row">
+      
+   
+
+    <div class="row" id="actions">
+     
+      <div class="col-md-9 docs-buttons">
+        <!-- <div class="btn-group"> -->
+          <!-- <button type="button" class="btn btn-primary" data-method="setDragMode" data-option="crop" title="Crop">
+            <span class="docs-tooltip" data-toggle="tooltip" title="cropper.setDragMode(&quot;crop&quot;)">
+              <span class="fa fa-crop"></span>
+            </span>
+          </button> -->
+        <!-- </div> -->
+
+
+        
+
+        <div class="d-flex gap-3 justify-content-left" style="text-align: center;">
+         <h4>Upload Document here </h4> 
+          <label class="btn btn-primary btn-upload" for="inputImage" title="Upload image file" >
+            <input type="file" class="sr-only" id="inputImage" name="file" accept=".jpg,.jpeg,.png,.gif,.bmp,.tiff,.pdf">
+            <span class="docs-tooltip" data-toggle="tooltip" title="Select Image to upload">
+              <span class="fa fa-upload"></span>
+              <!-- Upload File -->
+            </span>
+          </label>
+        </div>
+          <div class="col-md-9">
+            <div class="img-container"  id="imageBox" hidden style="max-height: 75vh;">
+              <img src="https://fengyuanchen.github.io/cropperjs/images/picture.jpg" alt="Picture" >
+            </div>
+          </div>
+<div class="d-flex gap-3 mt-2">          
+        <!-- </div> -->
+
+        <!-- <div class="btn-group btn-group-crop"> -->
+          <button type="button" class="btn btn-primary" data-method="getCroppedCanvas"
+            data-option="{ &quot;maxWidth&quot;: 4096, &quot;maxHeight&quot;: 4096 }" id="cropCanvas" hidden>
+            <span class="docs-tooltip" data-toggle="tooltip"
+              title="Click after text selection is done.">
+              Selection Done
+            </span>
+          </button>
+
+          <form action="{% url 'selectionOCR'%}" id="runOCR" hidden method="POST">
+              {% csrf_token %}
+              <input type="text" id="origImageBytes" name="origImageBytes" hidden>
+              <input type="text" id="imageBytes" name="imageBytes" hidden>
+              
+              <!-- Hidden input field to store the selected language data -->
+              <input type="text" id="selectedLanguage" name="selectedLanguage" hidden>
+              
+              <button type="submit" class="btn btn-primary">Run OCR</button>
+          </form>
+          
+        </div>
+
+
+        <div class="modal fade docs-cropped" id="getCroppedCanvasModal" role="dialog" aria-hidden="true"
+          aria-labelledby="getCroppedCanvasTitle" tabindex="-1">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <!-- <h5 class="modal-title" id="getCroppedCanvasTitle">Cropped</h5> -->
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body"></div>
+              <div class="modal-footer">
+                
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <a class="btn btn-primary" id="download" href="javascript:void(0);" download="cropped.jpg" hidden>Download</a>
+              </div>
+            </div>
+          </div>
+      </div>
+
+       
+      <!-- </div> -->
+
+      <div class="col-md-3 docs-toggles">
+        
+        </div>
+
+      </div>
+    </div>
+  </div>
+  
+  <!-- <script type="text/javascript" src="./index.js"></script> -->
+  <!-- <script>
+       var inputImage = document.getElementById('inputImage');
+       inputImage.onchange = function () {
+          var files = this.files;
+          console.log(files[0]);
+       }
+</script> -->
+<script>
+       function urltoFile(url, filename, mimeType){
+        return (fetch(url)
+            .then(function(res){return res.arrayBuffer();})
+            .then(function(buf){return new File([buf], filename,{type:mimeType});})
+        );
+    }
+       const useImage = (image)=>{
+              urltoFile('data:image/jpeg;base64,'.concat(image), 'image.jpg','image/jpeg')
+    .then(function(file){ const dataTransfer = new DataTransfer();
+    dataTransfer.items.add(file); var inpImg = document.getElementById("inputImage"); inpImg.files =dataTransfer.files; 
+   
+       const e = new Event('change'); document.querySelector("#inputImage").dispatchEvent(e)});}
+
+       
+    var form = document.getElementById('runOCR');
+    var languageInput = document.getElementById('selectedLanguage');
+
+    // Get the selector tag for language
+    var languageSelector = document.getElementById('languageSelector');
+
+    // Add an event listener to the form submission
+    form.addEventListener('submit', function(event) {
+        // Get the selected language value from the selector
+        var selectedLanguage = lang.value;
+        
+
+        // Set the selected language value to the hidden input field
+       document.getElementById('selectedLanguage').value = selectedLanguage;
+    });
+</script>
+</body>
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+  <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct" crossorigin="anonymous"></script> -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/js/all.min.js" integrity="sha512-uKQ39gEGiyUJl4AI6L+ekBdGKpGw4xJ55+xyJG7YFlJokPNYegn9KwQ3P8A7aFQAUtUsAQHep+d/lrGqrbPIDQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.0/cropper.min.js" integrity="sha512-7C1FbUL8fX5IKwBEHEjwyyGssfSOKms2NQbMj3GYdeQTr4Xmbrk/q/4eqcDuROAbJwT71ATVpVIUiaeMnNqq/Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="/static/assets/js/select_text.js"></script>
+
+<!-- <script>
+
+window.onload = function () {
+       'use strict';
+       var Cropper = window.Cropper;
+       var URL = window.URL || window.webkitURL;
+       var container = document.querySelector('.img-container');
+       var image = container.getElementsByTagName('img').item(0);
+       var download = document.getElementById('download');
+       var actions = document.getElementById('actions');
+       var dataX = document.getElementById('dataX');
+       var dataY = document.getElementById('dataY');
+       var dataHeight = document.getElementById('dataHeight');
+       var dataWidth = document.getElementById('dataWidth');
+       var dataRotate = document.getElementById('dataRotate');
+       var dataScaleX = document.getElementById('dataScaleX');
+       var dataScaleY = document.getElementById('dataScaleY');
+       var options = {
+              aspectRatio: NaN,
+              preview: '.img-preview',
+              ready: function (e) {
+                     console.log(e.type);
+              },
+              cropstart: function (e) {
+                     console.log(e.type, e.detail.action);
+              },
+              cropmove: function (e) {
+                     console.log(e.type, e.detail.action);
+              },
+              cropend: function (e) {
+                     console.log(e.type, e.detail.action);
+              },
+              crop: function (e) {
+                     var data = e.detail;
+
+                     console.log(e.type);
+                     dataX.value = Math.round(data.x);
+                     dataY.value = Math.round(data.y);
+                     dataHeight.value = Math.round(data.height);
+                     dataWidth.value = Math.round(data.width);
+                     dataRotate.value = typeof data.rotate !== 'undefined' ? data.rotate : '';
+                     dataScaleX.value = typeof data.scaleX !== 'undefined' ? data.scaleX : '';
+                     dataScaleY.value = typeof data.scaleY !== 'undefined' ? data.scaleY : '';
+              },
+              zoom: function (e) {
+                     console.log(e.type, e.detail.ratio);
+              }
+       };
+       var cropper = new Cropper(image, options);
+       var originalImageURL = image.src;
+       var uploadedImageType = 'image/jpeg';
+       var uploadedImageURL;
+
+       // Tooltip
+       $('[data-toggle="tooltip"]').tooltip();
+
+       // Buttons
+       if (!document.createElement('canvas').getContext) {
+              $('button[data-method="getCroppedCanvas"]').prop('disabled', true);
+       }
+
+       if (typeof document.createElement('cropper').style.transition === 'undefined') {
+              $('button[data-method="rotate"]').prop('disabled', true);
+              $('button[data-method="scale"]').prop('disabled', true);
+       }
+
+       // Download
+       if (typeof download.download === 'undefined') {
+              download.className += ' disabled';
+       }
+
+       // Options
+       actions.querySelector('.docs-toggles').onchange = function (event) {
+              var e = event || window.event;
+              var target = e.target || e.srcElement;
+              var cropBoxData;
+              var canvasData;
+              var isCheckbox;
+              var isRadio;
+
+              if (!cropper) {
+                     return;
+              }
+
+              if (target.tagName.toLowerCase() === 'label') {
+                     target = target.querySelector('input');
+              }
+
+              isCheckbox = target.type === 'checkbox';
+              isRadio = target.type === 'radio';
+
+              if (isCheckbox || isRadio) {
+                     if (isCheckbox) {
+                            options[target.name] = target.checked;
+                            cropBoxData = cropper.getCropBoxData();
+                            canvasData = cropper.getCanvasData();
+
+                            options.ready = function () {
+                                   console.log('ready');
+                                   cropper.setCropBoxData(cropBoxData).setCanvasData(canvasData);
+                            };
+                     } else {
+                            options[target.name] = target.value;
+                            options.ready = function () {
+                                   console.log('ready');
+                            };
+                     }
+
+                     // Restart
+                     cropper.destroy();
+                     cropper = new Cropper(image, options);
+              }
+       };
+
+       // Methods
+       actions.querySelector('.docs-buttons').onclick = function (event) {
+              var e = event || window.event;
+              var target = e.target || e.srcElement;
+              var cropped;
+              var result;
+              var input;
+              var data;
+
+              if (!cropper) {
+                     return;
+              }
+
+              while (target !== this) {
+                     if (target.getAttribute('data-method')) {
+                            break;
+                     }
+
+                     target = target.parentNode;
+              }
+
+              if (target === this || target.disabled || target.className.indexOf('disabled') > -1) {
+                     return;
+              }
+
+              data = {
+                     method: target.getAttribute('data-method'),
+                     target: target.getAttribute('data-target'),
+                     option: target.getAttribute('data-option') || undefined,
+                     secondOption: target.getAttribute('data-second-option') || undefined
+              };
+
+              cropped = cropper.cropped;
+
+              if (data.method) {
+                     if (typeof data.target !== 'undefined') {
+                            input = document.querySelector(data.target);
+
+                            if (!target.hasAttribute('data-option') && data.target && input) {
+                                   try {
+                                          data.option = JSON.parse(input.value);
+                                   } catch (e) {
+                                          console.log(e.message);
+                                   }
+                            }
+                     }
+
+                     switch (data.method) {
+                            case 'rotate':
+                                   if (cropped) {
+                                          cropper.clear();
+                                   }
+
+                                   break;
+
+                            case 'getCroppedCanvas':
+                                   try {
+                                          data.option = JSON.parse(data.option);
+                                   } catch (e) {
+                                          console.log(e.message);
+                                   }
+
+                                   if (uploadedImageType === 'image/jpeg') {
+                                          if (!data.option) {
+                                                 data.option = {};
+                                          }
+
+                                          data.option.fillColor = '#fff';
+                                   }
+
+                                   break;
+                     }
+
+                     result = cropper[data.method](data.option, data.secondOption);
+
+                     switch (data.method) {
+                            case 'rotate':
+                                   if (cropped) {
+                                          cropper.crop();
+                                   }
+
+                                   break;
+
+                            case 'scaleX':
+                            case 'scaleY':
+                                   target.setAttribute('data-option', -data.option);
+                                   break;
+
+                            case 'getCroppedCanvas':
+                                                  console.log("modal");
+                                   if (result) {
+                                          // Bootstrap's Modal
+                                          $('#getCroppedCanvasModal').modal().find('.modal-body').html(result);
+                                                 document.getElementById("imageBytes").value = result.toDataURL(uploadedImageType);
+                                          if (!download.disabled) {
+                                                 download.href = result.toDataURL(uploadedImageType);
+                                          }
+                                   }
+
+                                   break;
+
+                            case 'destroy':
+                                   cropper = null;
+
+                                   if (uploadedImageURL) {
+                                          URL.revokeObjectURL(uploadedImageURL);
+                                          uploadedImageURL = '';
+                                          image.src = originalImageURL;
+                                   }
+
+                                   break;
+                     }
+
+                     if (typeof result === 'object' && result !== cropper && input) {
+                            try {
+                                   input.value = JSON.stringify(result);
+                            } catch (e) {
+                                   console.log(e.message);
+                            }
+                     }
+              }
+       };
+
+       document.body.onkeydown = function (event) {
+              var e = event || window.event;
+
+              if (!cropper || this.scrollTop > 300) {
+                     return;
+              }
+
+              switch (e.keyCode) {
+                     case 37:
+                            e.preventDefault();
+                            cropper.move(-1, 0);
+                            break;
+
+                     case 38:
+                            e.preventDefault();
+                            cropper.move(0, -1);
+                            break;
+
+                     case 39:
+                            e.preventDefault();
+                            cropper.move(1, 0);
+                            break;
+
+                     case 40:
+                            e.preventDefault();
+                            cropper.move(0, 1);
+                            break;
+              }
+       };
+
+       // Import image
+       var inputImage = document.getElementById('inputImage');
+
+       if (URL) {
+              inputImage.onchange = function () {
+                     var files = this.files;
+                     var file;
+
+                     if (cropper && files && files.length) {
+                            file = files[0];
+
+                            if (/^image\/\w+/.test(file.type)) {
+                                   uploadedImageType = file.type;
+                                   document.getElementById("imageBox").removeAttribute("hidden")
+                                   if (uploadedImageURL) {
+                                          URL.revokeObjectURL(uploadedImageURL);
+                                   }
+
+                                   image.src = uploadedImageURL = URL.createObjectURL(file);
+                                   cropper.destroy();
+                                   cropper = new Cropper(image, options);
+                                   inputImage.value = null;
+                            } else {
+                                   window.alert('Please choose an image file.');
+                            }
+                     }
+              };
+       } else {
+              inputImage.disabled = true;
+              inputImage.parentNode.className += ' disabled';
+       }
+};
+</script> -->
+<!-- </html> -->
+    {%endblock %}
+    {% include 'includes/scripts.html' %}
+ 

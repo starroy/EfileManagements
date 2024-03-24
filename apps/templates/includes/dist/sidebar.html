@@ -15,7 +15,7 @@
     <button
       class="navbar-toggler d-lg-none collapsed"
       type="button"
-      data-bs-toggle="collapse"
+      data-bs-toggle="collapse"/
       data-bs-target="#sidebarMenu"
       aria-controls="sidebarMenu"
       aria-expanded="false"
@@ -37,6 +37,9 @@
     <!-- <div class="avatar-lg "> -->
                   <img src="/static/assets/img/GSTecLogo.png"
                     alt="Bonnie Green" height="100px">
+                  {% comment %} <video width="320" height="100px" controls loop autoplay>
+                    <source src="/static/assets/img/logo.mp4" type="video/mp4">
+                  </video> {% endcomment %}
                 <!-- </div> -->
     <!-- <div class="d-block">
                   <h2 class="h5 mb-3">Hi, Jane</h2>
@@ -60,8 +63,8 @@
   ></li>
     <ul class="nav flex-column pt-3 pt-md-0">
       
-      <li class="nav-item {% if request.path == '/selectTextCropper' %} active {% endif %}">
-        <a href="{% url 'selectTextCropper'%}" class="nav-link" target="_blank">
+      <li class="nav-item {% if request.path == '/tool' %} active {% endif %}">
+        <a href="{% url 'tool'%}" class="nav-link" target="_blank">
           <span class="sidebar-icon">
             <svg
               class="svg-icon"

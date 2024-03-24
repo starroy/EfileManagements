@@ -9,6 +9,7 @@ import string
 import cv2
 import numpy as np
 import pymongo
+import pytesseract
 import json
 from bson import ObjectId
 from django import template
@@ -30,6 +31,14 @@ from datetime import date
 from docx import Document
 import fitz
 from PIL import Image
+from reportlab.pdfgen import canvas
+from reportlab.lib.pagesizes import letter
+from reportlab.lib import colors
+from reportlab.lib.units import inch
+from django.utils.html import escape
+import datetime
+from reportlab.lib.pagesizes import A4
+
 
 def my_view(request):
     kmsdata = [{file_id: 0, name: 'FGA11', file_status: "Work in Progress", updatingDate: "03/20/2024", transition: "root" }]
@@ -51,6 +60,77 @@ import uuid
 # # print("mongodcliet",client)
 # db = client["userdata"]
 # db_forms = client["forms"]
+from reportlab.pdfgen import canvas
+from reportlab.lib.pagesizes import A4
+from django.http import HttpResponse
+
+def download_pdf(request):
+    attach = request.GET.get('attach', 'Unknown File')
+    linkFile = request.GET.get('linkfile', 'Unknown')
+    approved = request.GET.get('approved', 'Unknown')
+    customerName = request.GET.get('customerName', 'Unknown')
+    birth = request.GET.get('birth', 'Unknown')
+    panNumber = request.GET.get('panNumber', 'Unknown')
+    adharNumber = request.GET.get('adharNumber', 'Unknown')
+    shortDescription = request.GET.get('shortDescription', 'Unknown')
+    detailsItem = request.GET.get('detailsitem', 'Unknown')
+
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename="description.pdf"'
+
+    p = canvas.Canvas(response, pagesize=A4)
+    wrap_width = 440
+
+    lines = []
+    line = ""
+    for word in shortDescription.split():
+        if p.stringWidth(line + " " + word) < wrap_width:
+            line += " " + word
+        else:
+            lines.append(line.lstrip())
+            line = word
+    if line:
+        lines.append(line.lstrip())
+
+    details_lines = []
+    line = ""
+    for word in detailsItem.split():
+        if p.stringWidth(line + " " + word) < wrap_width:
+            line += " " + word
+        else:
+            details_lines.append(line.lstrip())
+            line = word
+    if line:
+        details_lines.append(line.lstrip())
+
+    p.setFont("Helvetica", 12)
+    p.setKeywords(['data', 'description', 'metadata'])
+    p.setCreator('Your Application Name')
+    p.drawString(80, 720, 'Attach: ' + attach)
+    p.drawString(80, 690, 'LinkFile: ' + linkFile)
+    p.drawString(80, 660, 'Approved: ' + approved)
+    p.drawString(80, 630, 'Customer Name: ' + customerName)
+    p.drawString(80, 600, 'Birthday: ' + birth)
+    p.drawString(80, 570, 'PanNumber: ' + panNumber)
+    p.drawString(80, 540, 'AdharNumber: ' + adharNumber)
+    p.drawString(80, 510, 'Short Description:')
+    
+    y_position = 490
+    for line in lines:
+        p.drawString(80, y_position, line)
+        y_position -= 20
+
+    y_position -= 20
+    p.drawString(80, y_position, 'Details:')
+    
+    y_position -= 20
+    for line in details_lines:
+        p.drawString(80, y_position, line)
+        y_position -= 20
+
+    p.save()
+    
+    return response
 
 
 # from django.shortcuts import render
@@ -98,6 +178,7 @@ def send_custom_data(request):
         approvedBy = data.get('approved_by')
         currentTime =  data.get('current_time')
         target_date =  data.get('target_date')
+        editable_data = data.get('editableData')
         print('status', status)
         result = collection.insert_one({'status': status, 
             'file_name': fileName,
@@ -113,6 +194,7 @@ def send_custom_data(request):
             'approvedBy':approvedBy,
             'approvedDate': currentTime,
             'target_date': target_date,
+            'editable_data': editable_data
         })
         if result:
             return JsonResponse({"message": "Success"})
@@ -168,6 +250,11 @@ from .models import Employee
 #         return JsonResponse({'created_date': created_date, 'author': author})
     
 #     return render(request, 'home/index.html')
+
+def get_data(request):
+    data = list(collection.find({}))
+    print(data)
+    return JsonResponse(data, safe=False)
 
 @login_required(login_url="/login/")
 def add_employee(request):
@@ -583,33 +670,88 @@ def select_cropper(request):
 def select_ocr(request):
     if request.method == "POST":
         img64 = request.POST["imageBytes"].split(",")[1]
-        if 'origImageBytes' in request.POST:
-            print('origImageBytes')
-            # print(f"Orig image: {request.POST['origImageBytes']}")
-            if 'recent_images' in request.session:
-                request.session['recent_images'] += [request.POST['origImageBytes'],]
-                print(len(request.session["recent_images"]))
-                if len(request.session["recent_images"]) > 5:
-                    request.session["recent_images"] = request.session['recent_images'][:-1]
-                print(len(request.session["recent_images"]))
+        lang = request.POST.get('selectedLanguage')
+        print('Selected Language:', lang)
+        if lang == 'en':
+            if 'origImageBytes' in request.POST:
+                print('origImageBytes')
+                # print(f"Orig image: {request.POST['origImageBytes']}")
+                if 'recent_images' in request.session:
+                    request.session['recent_images'] += [request.POST['origImageBytes'],]
+                    # print(len(request.session["recent_images"]))
+                    if len(request.session["recent_images"]) > 5:
+                        request.session["recent_images"] = request.session['recent_images'][:-1]
+                    # print(len(request.session["recent_images"]))
+                else:
+                    request.session['recent_images'] = [request.POST['origImageBytes'],]
+            # print(request.session['recent_images'])
+            decoded_data = base64.b64decode(img64)
+            im = Image.open(BytesIO(decoded_data))
+            arrImg = np.array(im)
+            reader = Reader(
+            [lang], gpu=False, model_storage_directory="ocr_models"
+                )  
+            frame = cv2.cvtColor(arrImg, cv2.COLOR_RGB2BGR)
+            # frame = Image.fromarray(arrImg)
+            result = reader.readtext(frame, paragraph=True, y_ths = -0.1)
+            # print(result)
+            r_string = " ".join([r[1] for r in result])
+        else :
+            print('other language-------------------------->', lang)
+            decoded_data = base64.b64decode(img64)
+            language = ''
+            if lang == 'hi':
+                 language = 'hin'
+                 print(language)
             else:
-                request.session['recent_images'] = [request.POST['origImageBytes'],]
-        print(request.session['recent_images'])
-        decoded_data = base64.b64decode(img64)
-        im = Image.open(BytesIO(decoded_data))
-        arrImg = np.array(im)
-        reader = Reader(
-        ["en"], gpu=False, model_storage_directory="ocr_models"
-            )  
-        frame = cv2.cvtColor(arrImg, cv2.COLOR_RGB2BGR)
-        # frame = Image.fromarray(arrImg)
-        result = reader.readtext(frame, paragraph=True, y_ths = -0.1)
-        # print(result)
-        r_string = " ".join([r[1] for r in result])
-        
+                if lang == 'mr':
+                    language = "mar"
+                    print(language)
+            # Convert the decoded image data to a PIL Image object
+            img = Image.open(BytesIO(decoded_data))
+
+            # Use pytesseract to extract text from the image
+            extracted_text = pytesseract.image_to_string(img, lang=language)
+            r_string = extracted_text
         # r_string = result[0]
         return render(request, "home/select-ocr-done.html", {"imageBytes": img64, "result": r_string})
 
+@login_required(login_url="/login/")
+def pdf_ocr(request):
+    if request.method == "POST":
+        lang = request.POST.get('lang')
+        print('pdf------------>')
+
+    if 'file' in request.FILES:
+        file = request.FILES['file']
+        
+        if file.name.endswith('.pdf'):
+            pdf_data = file.read()
+            pdf_document = fitz.open(stream=pdf_data, filetype="pdf")
+            
+            extracted_text = ""
+            
+            language = lang
+            if lang == 'hi':
+                 language = 'hin'
+                 print(language)
+            else:
+                if lang == 'mr':
+                    language = "mar"
+                    print(language)
+            for page_num in range(pdf_document.page_count):
+                page = pdf_document.load_page(page_num)
+                pix = page.get_pixmap()
+                img = Image.frombytes("RGB", [pix.width, pix.height], pix.samples)
+                
+                extracted_text += pytesseract.image_to_string(img, lang=language) + "\n"
+        else:
+            img = Image.open(file)
+            extracted_text = pytesseract.image_to_string(img, lang=lang)
+        
+        return render(request, "home/select-ocr-pdf-done.html", {"result": extracted_text})
+    
+    # return JsonResponse({'error': 'No file found'}, status=400)
 
 @login_required(login_url="/login/")
 def KMS(request):
@@ -619,13 +761,24 @@ def KMS(request):
 def MyQueue(request):
     return render(request, "home/myQueue.html")
 
+@login_required(login_url="/tool/")
+def tool(request):
+    return render(request, "home/tools.html")
+
 @login_required(login_url="/login/")
 def UserManagement(request):
     return render(request, "home/userManagement.html")
 
 @login_required(login_url="/login/")
 def Dashboard(request):
-    return render(request, "home/dashboard.html")
+    data = list(collection.find({}))
+    for item in data:
+        if '_id' in item:
+            item['_id'] = str(item['_id'])
+    json_data = json.dumps(data)
+    # print (data)
+    return render(request, 'home/dashboard.html', {'json_data': json_data})
+    # return render(request, "home/dashboard.html")
 
 # ------------------ Speech to Text -----------------------
 @login_required(login_url="/login/")

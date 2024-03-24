@@ -1,0 +1,35 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} UI Notifications {% endblock %} 
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+{% comment %} <h2 class="mt-4 pt-4">Transcript</h2> {% endcomment %}
+<div class="mt-5 mb-3 px-5 d-flex flex-column col-md-10 align-items-center justify-content-center">
+    <button id = "Ocr" class="btn btn-primary align-items-center col-md-5 mt-6" onclick="handleNavigetOCR()">
+        OCR
+    </button>
+    <button id = "Stt" class="btn btn-primary align-items-center col-md-5 mt-6" onclick="handleNavigetstt()">
+        Speech To Text
+    </button>
+    <button id = "Att" class="btn btn-primary align-items-center col-md-5 mt-6" onclick="handleNavigetatt()">
+        Audio To Text
+    </button>
+</div>
+
+<script>
+    function handleNavigetOCR() {
+        window.location.href = 'selectTextCropper';
+    }
+    function handleNavigetstt() {
+        window.location.href = 'speechToTextNew';
+    }
+    function handleNavigetatt() {
+        window.location.href = 'speechToText';
+    }
+    
+</script>
+{% endblock %}

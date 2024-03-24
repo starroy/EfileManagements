@@ -7,7 +7,7 @@
 
 {% block content %}
 
-<h2 class="mt-4 pt-4">Transcript</h2>
+{% comment %} <h2 class="mt-4 pt-4">Transcript</h2> {% endcomment %}
 <div class="mt-5 mb-3 px-5">
     <div class = "col-md-12 row">
         <div class ="col-md-4">
@@ -21,25 +21,25 @@
         </div>
         <form class="search form-group col-md-4" id="search-main"  method="post" enctype="multipart/form-data">
           {%csrf_token%}
-          <label for="searchBar">Search User</label>
+          <label for="searchBar">User</label>
           <div class="input-group input-group-merge search-bar">
-            <span class="input-group-text" id="topbar-addon">
+            {% comment %} <span class="input-group-text" id="topbar-addon">
               <svg class="icon icon-xs" x-description="Heroicon name: solid/search" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                 <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"></path>
               </svg>
-            </span>
+            </span> {% endcomment %}
               <input type="text" class="form-control col-md-2" id="searchBar" placeholder="Search" aria-label="Search" aria-describedby="topbar-addon" name="searchDoc">
           </div>
         </form>
         <form class="search form-group col-md-4" id="search-main"  method="post" enctype="multipart/form-data">
           {%csrf_token%}
-          <label for="searchBar">Searh File ID</label>
+          <label for="searchBar">File ID</label>
           <div class="input-group input-group-merge search-bar">
-            <span class="input-group-text" id="topbar-addon">
+            {% comment %} <span class="input-group-text" id="topbar-addon">
               <svg class="icon icon-xs" x-description="Heroicon name: solid/search" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                 <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"></path>
               </svg>
-            </span>
+            </span> {% endcomment %}
               <input type="text" class="form-control col-md-2" id="searchBar" placeholder="Search" aria-label="Search" aria-describedby="topbar-addon" name="searchDoc">
           </div>
         </form>

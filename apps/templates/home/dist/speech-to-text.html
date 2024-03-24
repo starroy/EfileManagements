@@ -1,0 +1,64 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Dashboard {% endblock %} 
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{%block content%}
+
+<div class="container">
+<div class="voice_to_text">
+  <h1 class="text-center">Audio to Text Converter</h1>
+  <div class="mt-5 pt-5 text-center col-md-8 mx-auto">
+    <div class="d-flex justify-content-left" style="text-align: center;margin-left: 4em">
+      <h4>Upload Audio here </h4> 
+      <label class="btn btn-primary btn-upload" for="inputaudio" title="Upload audio file" style ="margin-left: 1em;">
+          <input type="file" class="sr-only" id="inputaudio" name="pdffile" accept=".mp3, .wav, .aac, .flac, .ogg. .wma, .aiff, .m4a, .amr, .midi">
+          <span class="docs-tooltip" data-toggle="tooltip" title="Select audio to upload">
+                <span class="fa fa-upload"></span>
+          <!-- Upload File -->
+          </span>
+      </label>
+    </div>
+  <textarea class="form-control" id="convert_text" cols="50" rows="10"></textarea>
+  <div class="d-flex justify-content-between">
+  <button class="btn btn-primary mt-3" id="click_to_record">Voice To Text</button>
+  <a class="btn btn-primary mt-3" href="{%url 'speechToText'%}" id="clear">Clear</a>
+
+</div>
+</div>
+</div></div>
+
+<script>
+  click_to_record.addEventListener("click", function () {
+  var speech = true;
+  console.log("recording")
+  // window.SpeechRecognition = window.webkitSpeechRecognition;
+ var recognition = new webkitSpeechRecognition();
+  // const recognition = new SpeechRecognition();
+  recognition.continuous = true;
+
+  recognition.interimResults = true;
+  console.log(recognition)
+
+  recognition.addEventListener("result", (e) => {
+    const transcript = Array.from(e.results)
+      .map((result) => result[0])
+      .map((result) => result.transcript)
+      .join("");
+    document.getElementById("convert_text").innerHTML = transcript;
+    console.log(transcript);
+  });
+
+  if (speech == true) {
+    recognition.start();
+  }
+});
+</script>
+
+    {%endblock %}
+        
+
+    {% include 'includes/scripts.html' %}
+

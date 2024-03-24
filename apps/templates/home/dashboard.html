@@ -1,281 +1,303 @@
 {% extends "layouts/base.html" %}
 
-{% block title %} Dashboard {% endblock %} 
+{% block title %} UI Notifications {% endblock %} 
 
 <!-- Specific Page CSS goes HERE  -->
 {% block stylesheets %}{% endblock stylesheets %}
 
 {% block content %}
 
-
-
-    <div class="container">
-      <div class="row">
-        <div class="col-md-12 mt-5 text-center mb-5">
-          <h1>User Data</h1>
-        </div>
-      </div>
-        <div class="d-flex gap-3 justify-content-around text-nowrap">
-          <iframe name="votar" style="display:none;"></iframe>
-
-          
-          <form
-              method="post"
-            id="imagetotextForm"
-            enctype="multipart/form-data"
-          >
-            {% csrf_token %}
-            <!-- <div class="col-md-12"> -->
-            <div class="form-group">
-              <label for="image">Upload Adhar Image</label>
-              <input
-                type="file"
+{% comment %} <h2 class="mt-4 pt-4">Transcript</h2> {% endcomment %}
+<div class="mt-5 mb-3 px-5">
+  <div class = "col-md-12 row">
+      <div class ="col-md-3">
+          <label class="form-label" for="name">Calendar</label>
+          <div class = 'd-flex flex-row align-items-center'>
+            From:
+            <input
                 class="form-control"
-                name="image"
-                id="image"
-                placeholder="Image"
-                accept="image/*"
-              />
-            </div>
-            <button type="submit" class="btn btn-primary btn-submit mt-4 mb-4" id="adhar">
-              Submit
-            </button>
-          </form>
-          <form
-            method="post"
-            id="imagetotextFormPan"
-            enctype="multipart/form-data"
-          >
-            {% csrf_token %}
-            <div class="form-group">
-              <label for="imagepan">Upload PAN Image</label>
-              <input
-                type="file"
-                class="form-control"
-                name="imagepan"
-                id="imagepan"
-                placeholder="Image"
-                accept="image/*"
-              />
-            </div>
-            <button type="submit" class="btn btn-primary btn-submit mt-4 mb-4" id="pan">
-              Submit
-            </button>
-        <!-- </div> -->
-      <!-- </div> -->
-      </div>
-
-      <div class="row col-md-12 mt-4 mb-5 d-flex">
-        <!-- <div class="header"> -->
-        <!--   <h1 class="fw-bold text-center">Result</h1> -->
-        <!-- </div> -->
-        <div class="card col-md-6">
-          <!-- <textarea -->
-          <!--   disabled -->
-          <!--   style="height: 300px; margin-bottom: 10px; resize: none" -->
-          <!--   id="result" -->
-          <!--   class="col-md-12 mt-2 bg-light p-5 result" -->
-          <!-- > -->
-          <form class="col-md-12" action="" method="POST">
-            <div class="col-md-10 gap-3 py-3 px-3">
-              <label class="form-label" for="name">Name</label>
-              <input
-                class="form-control px-3"
-                id="name"
-                type="text"
-                name="name"
-              />
-            </div>
-            <div class="col-md-10 gap-3 py-2 px-3">
-              <label class="form-label text-nowrap" for="dob"
-                >Date of Birth</label
-              >
-              <input class="form-control" id="dob" type="text" name="dob" />
-            </div>
-            <div class="col-md-10 gap-3 py-2 px-3">
-              <label class="form-label text-nowrap" for="gender">Gender</label>
-              <input
-                class="form-control"
-                id="gender"
-                type="text"
-                name="gender"
-              />
-            </div>
-            <div class="col-md-10 gap-3 py-2 px-3">
-              <label class="form-label text-nowrap" for="fatherName"
-                >Father's Name</label
-              >
-              <input
-                class="form-control"
-                id="fatherName"
-                type="text"
-                name="fatherName"
-              />
-            </div>
-            <div class="col-md-10 gap-3 py-2 px-3">
-              <label class="form-label text-nowrap" for="adharNo"
-                >Adhar Number</label
-              >
-              <input
-                class="form-control"
+                style="margin-left: 1em;"
                 id="adharNo"
-                type="text"
+                type="date"
                 name="adharNo"
-              />
-            </div>
-            <div class="col-md-10 gap-3 py-2 px-3">
-              <label class="form-label text-nowrap" for="panNo"
-                >PAN Number</label
-              >
-              <input
-                class="form-control"
-                id="panNo"
-                type="text"
+            />
+          </div>
+          <div class = 'd-flex flex-row align-items-center'>
+            To:
+            <input
+                class="form-control mt-2"
+                style="margin-left: 2.5em;"
+                id="adharNo"
+                type="date"
                 name="adharNo"
-              />
-            </div>
-            <button
-              type="submit"
-              class="btn btn-primary btn-submit mt-4"
-              style="margin-bottom: 10px"
-            >
-              Submit
-            </button>
-          </form>
-          <!-- </textarea> -->
+            />
+          </div>
+      </div>
+      <form class="search form-group col-md-3 " id="search-main"  method="post" enctype="multipart/form-data">
+        {%csrf_token%}
+        <label for="searchBar">User</label>
+        <div class="input-group input-group-merge search-bar">
+          {% comment %} <span class="input-group-text" id="topbar-addon">
+            <svg class="icon icon-xs" x-description="Heroicon name: solid/search" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+              <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"></path>
+            </svg>
+          </span> {% endcomment %}
+            <input type="text" class="form-control col-md-2" id="searchBar" placeholder="Search" aria-label="Search" aria-describedby="topbar-addon" name="searchDoc">
         </div>
-        <div class="card col-md-6 d-flex flex-column">
-          <img
-            disabled
-            class="col-md-12"
-            id="imgCtn"
-            style="
-              height: 300px;
-              resize: none;
-              margin-top: 10px;
-              margin-bottom: 10px;
-            "
-          />
-          <img
-            disabled
-            class="col-md-12"
-            id="imgCtnPan"
-            style="
-              height: 300px;
-              resize: none;
-              margin-top: 10px;
-              margin-bottom: 10px;
-            "
-          />
+      </form>
+      <form class="search form-group col-md-3" id="search-main"  method="post" enctype="multipart/form-data">
+        {%csrf_token%}
+        <label for="searchBar">File ID</label>
+        <div class="input-group input-group-merge search-bar">
+            <input type="text" class="form-control col-md-2" id="searchBar" placeholder="Search" aria-label="Search" aria-describedby="topbar-addon" name="searchDoc">
         </div>
+      </form>
+  </div>
+  <div class="container justify-content-center">
+    <div class="row">
+      <div class="col-md-4">
+          <canvas id="myPieChart" width="100%" height="300"></canvas>
+      </div>
+      <div class="col-md-4" style="margin-left: 3em;">
+          <canvas id="myStackedBarChart" width="100%" height="100%"></canvas>
       </div>
     </div>
- <script src="https://code.jquery.com/jquery-3.5.1.js" 
-          integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" 
-            crossorigin="anonymous"></script>
+    <div class="row mt-6">
+      <div class="col-md-4">
+          <canvas id="myIdbarChart" width="100%" height="100%"></canvas>
+      </div>
+      <div class="col-md-4" style="margin-left: 3em;">
+          <canvas id="myFileChart" width="100%" height="100%"></canvas>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-chartjs-3d-pie-chart"></script>
 
-    <script>
-      $(document).ready(function () {
-        $("#imagetotextForm").submit(function (e) {
-          e.preventDefault();
-          var formData = new FormData(this);
-          $(".btn-submit").html(
-            '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...'
-          );
-          // disable submit button
-          $(".btn-submit").attr("disabled", true);
-          $.ajax({
-            url: "{% url 'imagetoText' %}",
-            type: "POST",
-            data: formData,
-            cache: false,
-            contentType: false,
-            processData: false,
-            success: function (data) {
-              // var tex = data.text;
-              // $(".result").html(tex);
-              var b64imgData = data.bytes; // bytes is the 'bytes string' show upper
-              // var img = new Image();
-
-              imgUrl = "data:image/jpg;base64, " + b64imgData;
-              document.getElementById("imgCtn").src = imgUrl;
-              document.getElementById("name").value = data.text.user_name;
-              document.getElementById("gender").value = data.text.gender;
-              document.getElementById("adharNo").value = data.text.adhaar_no;
-              document.getElementById("dob").value = data.text.dob;
-              // img.src = imgUrl;
-
-              // $(".imgCtn").html(img);
-              // remove spinner from submit button
-              $(".btn-submit").html("Submit");
-              // enable submit button
-              $(".btn-submit").attr("disabled", false);
-              return false;
+<script>
+    var mongoData = JSON.parse('{{ json_data|escapejs }}');
+    var created = 0;
+    var assigned = 0;
+    var work_in_progress = 0;
+    var for_approval = 0;
+    var approved = 0;
+    var completed = 0;
+    var close = 0;
+    mongoData.forEach(function(item) {
+        if (item.status === 'Created') {
+            created++;
+        }
+        if (item.status === 'Assigned') {
+            assigned++;
+        }
+        if (item.status === 'Work in Progress') {
+            work_in_progress++;
+        }
+        if (item.status === 'For Approval') {
+            for_approval++;
+        }
+        if (item.status === 'Approved') {
+            approved++;
+        }
+        if (item.status === 'Completed') {
+            completed++;
+        }
+        if (item.status === 'Closed') {
+          close++;
+        }
+    });
+    var ctx = document.getElementById('myPieChart').getContext('2d');
+    var myPieChart = new Chart(ctx, {
+        type: 'pie',
+        data: {
+            labels: ['Created', 'Assigned', 'Work in Progress', 'For Approval', 'Approved', 'Completed', 'Closed'],
+            datasets: [{
+                data: [created, assigned, work_in_progress, for_approval, approved, completed, close],
+                backgroundColor: [
+                    'red',
+                    'blue',
+                    'yellow',
+                    'green',
+                    'purple',
+                    'grey',
+                    'orange'
+                ]
+            }]
+        },
+        options: {
+            title: {
+                display: true,
+                text: 'Status Distribution'
             },
-            error: function (data) {
-              // remove spinner from submit button
-              $(".btn-submit").html("Submit");
-              // enable submit button
-              $(".btn-submit").attr("disabled", false);
-            },
-          });
-        });
-      });
-    </script>
+            plugins: {
+                'chartjs-3d-pie-chart': {
+                    enabled: true,
+                    depth: 20,
+                    angle: 30
+                },
+                title: {
+                    display: true,
+                    text: 'By Status',
+                },
+            }
+        }
+    });
+    var fileDatas = [];
 
-    <script>
-      $(document).ready(function () {
-        $("#imagetotextFormPan").submit(function (e) {
-          e.preventDefault();
-          var formData = new FormData(this);
-          // $(".btn-submit").html(
-          $("#pan").html(
-            '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...'
-          );
-          // disable submit button
-          // $(".btn-submit").attr("disabled", true);
-          $("#pan").attr("disabled", true);
-          $.ajax({
-            url: "{% url 'imagetoTextPan' %}",
-            type: "POST",
-            data: formData,
-            cache: false,
-            contentType: false,
-            processData: false,
-            success: function (data) {
-              // var tex = data.text;
-              // $(".result").html(tex);
-              var b64imgData = data.bytes; // bytes is the 'bytes string' show upper
-              // var img = new Image();
-
-              imgUrl = "data:image/jpg;base64, " + b64imgData;
-              document.getElementById("imgCtnPan").src = imgUrl;
-              document.getElementById("panNo").value = data.text.pan_no;
-              document.getElementById("fatherName").value = data.text.fathers_name;
-              // img.src = imgUrl;
-
-              // $(".imgCtn").html(img);
-              // remove spinner from submit button
-              // $(".btn-submit").html("Submit");
-              $("#pan").html("Submit");
-              // enable submit button
-              // $(".btn-submit").attr("disabled", false);
-              $("#pan").attr("disabled", false);
-              return false;
+    // Calculate the count of files for each user and status
+    mongoData.forEach(item => {
+        var existingItem = fileDatas.find(data => data.user === item.fileId && data.status === item.status);
+        if (existingItem) {
+            existingItem.count++;
+        } else {
+            fileDatas.push({ user: item.fileId, status: item.status, count: 1 });
+        }
+    });
+    var userss = [...new Set(fileDatas.map(item => item.user))];
+    var statusess = [...new Set(fileDatas.map(item => item.status))];
+    var datasetss = statusess.map(status => {
+        return {
+            label: status,
+            data: userss.map(user => {
+              console.log(user)
+                var userData = fileDatas.find(item => item.user === user && item.status === status);
+                console.log('ise', userData)
+                let index = userData ? userData.count : 0;
+                console.log('index', index)
+                return userData ? userData.count : 0;
+            }),
+            backgroundColor: [
+            'red',
+            'blue',
+            'yellow',
+            'green',
+            'purple',
+            'grey',
+            'orange'][statusess.indexOf(status)], // Customize colors here
+        };
+    });
+    var ctxe = document.getElementById('myIdbarChart').getContext('2d');
+    var myStackedBarChart = new Chart(ctxe, {
+    type: 'bar',
+    data: {
+        labels: userss,
+        datasets: datasetss,
+    },
+    options: {
+        scales: {
+            x: {
+                stacked: true,
             },
-            error: function (data) {
-              // remove spinner from submit button
-              // $(".btn-submit").html("Submit");
-              $("#pan").html("Submit");
-              // enable submit button
-              // $(".btn-submit").attr("disabled", false);
-              $("#pan").attr("disabled", false);
+            y: {
+                stacked: true,
             },
-          });
-        });
-      });
-    </script>
-    
-    {%endblock %}
-    {% include 'includes/scripts.html' %}
- 
+        },
+        plugins: {
+            title: {
+                display: true,
+                text: 'By File ID & Status',
+            },
+        },
+    },
+});
+
+var fileData = [];
+
+// Calculate the count of files for each user and status
+mongoData.forEach(item => {
+    var existingItem = fileData.find(data => data.user === item.createBy && data.status === item.status);
+    if (existingItem) {
+        existingItem.count++;
+    } else {
+        fileData.push({ user: item.createBy, status: item.status, count: 1 });
+    }
+});
+
+var users = [...new Set(fileData.map(item => item.user))];
+var statuses = [...new Set(fileData.map(item => item.status))];
+
+var datasets = statuses.map((status, index) => {
+    return {
+        label: status,
+        data: users.map(user => {
+            var userData = fileData.find(item => item.user === user && item.status === status);
+            return userData ? userData.count : 0;
+        }),
+        backgroundColor: [
+            'red',
+            'blue',
+            'yellow',
+            'green',
+            'purple',
+            'grey',
+            'orange'
+        ][index % 7], // Customize colors here
+    };
+});
+
+var ctx = document.getElementById('myStackedBarChart').getContext('2d');
+var myStackedBarChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels: users,
+        datasets: datasets,
+    },
+    options: {
+        indexAxis: 'y',
+        plugins: {
+            title: {
+                display: true,
+                text: 'File Count By User and Status',
+            },
+        },
+    },
+});
+
+var completedData = [];
+
+// Calculate the count of files for each year with status "Completed"
+mongoData.forEach(item => {
+    if (item.status === "Completed") {
+        var year = item.modifiedDate.split('/')[2]; // Extract year from the modified date
+        var existingItem = completedData.find(data => data.year === year);
+        if (existingItem) {
+            existingItem.count++;
+        } else {
+            completedData.push({ year: year, count: 1 });
+        }
+    }
+});
+
+// Sort the completedData by year in ascending order
+completedData.sort((a, b) => a.year - b.year);
+
+var years = completedData.map(item => item.year);
+var fileNumbers = completedData.map(item => item.count);
+
+var ctxy = document.getElementById('myFileChart').getContext('2d');
+var myFileChart = new Chart(ctxy, {
+    type: 'bar',
+    data: {
+        labels: years,
+        datasets: [{
+            label: 'File Numbers',
+            data: fileNumbers,
+            backgroundColor: 'blue', // Customize color here
+        }],
+    },
+    options: {
+        indexAxis: 'x',
+        plugins: {
+            title: {
+                display: true,
+                text: 'File Numbers by Year (Status: Completed)',
+            },
+        },
+    },
+});
+
+</script>
+<script>
+</script>
+{% endblock %}
